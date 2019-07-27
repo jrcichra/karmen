@@ -1,4 +1,4 @@
-def recieve_packet(socket):
+def receive_packet(socket):
     message = b""  # create an empty binary message buffer
     flag = False  # determines if we found the end or not
     err = False
