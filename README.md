@@ -4,3 +4,8 @@
 
 A centralized microservices framework for declarative applications
 
+## Get Started
+### Using Karmen:
+1. See [Docker Hub](https://github.com/jrcichra/karmen/releases) for releases
+2. See [an example config](./example_config.yml) to start declaring your workflow
+3. Run Karmen as part of your docker-compose.yml. see [my docker-compose.yml](./example_docker-compose.yml):
