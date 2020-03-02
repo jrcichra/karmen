@@ -1,0 +1,8 @@
+FROM balenalib/raspberrypi3-golang:1.11.13 as firststage
+WORKDIR /karmen
+ADD . .
+RUN go build -o karmen .
+FROM balenalib/raspberrypi3:buster-20200207
+WORKDIR /karmen
+COPY --from=firststage /karmen/karmen .
+CMD ["./karmen"]

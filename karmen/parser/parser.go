@@ -1,7 +1,5 @@
 package parser
 
-// This parser uses a LOT of type switches. I apologize in advance
-
 import (
 	"controller/common"
 	"errors"
