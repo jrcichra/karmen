@@ -16,7 +16,6 @@ jobs:
     - name: Check out code into the Go module directory
       uses: actions/checkout@v2
 
-    - name: Build
+    - name: Build & Push Karmen
       run: |
-        cd karmen/
-        go build -o karmen -v .
+        bash -x ci.sh
