@@ -8,4 +8,27 @@ A centralized microservices framework for declarative applications
 ### Using Karmen:
 1. See [Docker Hub](https://github.com/jrcichra/karmen/releases) for releases
 2. See [an example config](./example_config.yml) to start declaring your workflow
-3. Run Karmen as part of your docker-compose.yml. see [my docker-compose.yml](./example_docker-compose.yml):
+3. Run Karmen as part of your docker-compose.yml. see my [ example docker-compose.yml](./example_docker-compose.yml)
+### Using Karmen's Python Client:
+1. Ability to `pip install karmen` coming soon
+2. Usage example:
+```python
+import karmen
+
+# Function that performs an action and returns a result
+def hello(params,result):
+    print("Hello, world!")
+    result.Pass()
+# Spawn a karmen client
+k = karmen.Client()
+# Register this client with the karmen server (based on hostname)
+k.registerContainer()
+# Register an event with the karmen server
+k.registerEvent("docker_rocks")
+# Register an action with the karmen server
+k.registerAction("hello", hello)
+# Emit an event called docker_rocks - this is declared in config.yml
+k.emitEvent("docker_rocks")
+```
+
+### More docs to come!
