@@ -17,4 +17,4 @@ jobs:
       uses: actions/checkout@v2
 
     - name: Build
-      run: go build -v .
+      run: go build -o karmen -v karmen
