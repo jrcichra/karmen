@@ -2,7 +2,7 @@ name: Karmen
 on: [push]
 jobs:
 
-  build-alpine:
+  build:
     name: Build
     runs-on: ubuntu-latest
     steps:
@@ -13,17 +13,6 @@ jobs:
     - name: Build & Push Karmen
       run: |
         bash -x ci.sh
-      env:
-        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  build-rpi:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-      uses: actions/checkout@v2
-      - name: Build & Push Karmen
-      run: |
-        bash -x ci.sh rpi
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

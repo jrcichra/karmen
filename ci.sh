@@ -19,21 +19,10 @@ docker buildx inspect --bootstrap
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin 
 # Phase 3 - build a container based on the arg passed in
 cd containers
-
-if [ "$1" == "rpi" ];then
-    for d in karmen*/; do
-        dir=${d%/}
-        cd $d
-        docker buildx build --platform linux/arm/v7 -t jrcichra/${dir}_rpi:${GITHUB_SHA:0:8} -f Dockerfile-rpi --push . 
-        docker buildx imagetools inspect jrcichra/${dir}_rpi
-        cd ..
-    done
-else
-    for d in */; do
-        dir=${d%/}
-        cd $d
-        docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:${GITHUB_SHA:0:8} --push .
-        docker buildx imagetools inspect jrcichra/${dir}
-        cd ..
-    done
-fi
+for d in */; do
+    dir=${d%/}
+    cd $d
+    docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:${GITHUB_SHA:0:8} --push .
+    docker buildx imagetools inspect jrcichra/${dir}
+    cd ..
+done
