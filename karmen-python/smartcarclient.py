@@ -1,5 +1,5 @@
 ###
-# jrcichra 2020 - made for controllerv2
+# jrcichra 2020
 ###
 
 import enum
