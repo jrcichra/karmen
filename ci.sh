@@ -24,9 +24,8 @@ for d in */; do
     cd $d
     docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:${GITHUB_SHA:0:8} --push .
     docker buildx imagetools inspect jrcichra/${dir}:${GITHUB_SHA:0:8}
+    # Also update :latest (should be quick since we just built)
+    docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:latest --push .
+    docker buildx imagetools inspect jrcichra/${dir}:latest
     cd ..
 done
-
-# Also update :latest
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:latest --push .
-docker buildx imagetools inspect jrcichra/${dir}:latest
