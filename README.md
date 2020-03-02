@@ -31,4 +31,7 @@ k.registerAction("hello", hello)
 k.emitEvent("docker_rocks")
 ```
 
+### Similar projects
+1. https://netflix.github.io/conductor/
+
 ### More docs to come!
