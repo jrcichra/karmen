@@ -10,7 +10,7 @@ A centralized microservices framework for declarative applications
 2. See [an example config](./example_config.yml) to start declaring your workflow
 3. Run Karmen as part of your docker-compose.yml. see my [ example docker-compose.yml](./example_docker-compose.yml)
 ### Using Karmen's Python Client:
-1. Ability to `pip install karmen` coming soon
+1. Install using `pip install karmen`
 2. Usage example:
 ```python
 import karmen
