@@ -31,6 +31,9 @@ k.registerAction("hello", hello)
 k.emitEvent("docker_rocks")
 ```
 
+### Projects using Karmen
+1. https://github.com/jrcichra/smartcar
+
 ### Similar projects
 1. https://netflix.github.io/conductor/
 
