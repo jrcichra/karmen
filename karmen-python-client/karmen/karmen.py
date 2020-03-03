@@ -185,7 +185,7 @@ class Result:
 
 class Client:
     # Client used by python code wanting to inserface with the controller
-    def __init__(self, host="controller", port=8080):
+    def __init__(self, host="karmen", port=8080):
         self.host = host
         self.port = port
         self.socket = socket.socket()
