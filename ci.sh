@@ -18,14 +18,9 @@ docker buildx inspect --bootstrap
 # Phase 2 - sign in
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin 
 # Phase 3 - build a container based on the arg passed in
-cd containers
-for d in */; do
-    dir=${d%/}
-    cd $d
-    docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:${GITHUB_SHA:0:8} --push .
-    docker buildx imagetools inspect jrcichra/${dir}:${GITHUB_SHA:0:8}
-    # Also update :latest (should be quick since we just built)
-    docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/${dir}:latest --push .
-    docker buildx imagetools inspect jrcichra/${dir}:latest
-    cd ..
-done
+cd containers/karmen
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:${GITHUB_SHA:0:8} --push .
+docker buildx imagetools inspect jrcichra/karmen:${GITHUB_SHA:0:8}
+# Also update :latest (should be quick since we just built)
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:latest --push .
+docker buildx imagetools inspect jrcichra/karmen:latest
