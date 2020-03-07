@@ -1,15 +1,12 @@
 name: Karmen
 on: [push]
 jobs:
-
   build:
     name: Build
     runs-on: ubuntu-latest
     steps:
-
     - name: Check out code
       uses: actions/checkout@v2
-
     - name: Build & Push Karmen
       run: |
         bash -x ci.sh
