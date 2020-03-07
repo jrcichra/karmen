@@ -505,7 +505,7 @@ func main() {
 	c := Controller{}
 	c.connections = make(map[string]conn)
 	go func() {
-		log.Println(http.ListenAndServe("localhost:6060", nil))
+		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
 	}()
 	c.Start(8080)
 
