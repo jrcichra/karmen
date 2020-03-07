@@ -444,10 +444,10 @@ func (c *Config) block(blocksArrayInterface interface{}) (*Block, error) {
 							//we've hit the actions, process each action in a function
 							processedAction, err := c.action(k, action2)
 							//add action to map of actions
-							c.Actions[processedAction.Name] = processedAction
 							if err != nil {
 								return nil, err
 							}
+							c.Actions[processedAction.Name] = processedAction
 							//put our new action onto the block
 							block.Children = append(block.Children, processedAction)
 						}
