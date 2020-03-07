@@ -348,6 +348,7 @@ func (c *Controller) handleEvent(msg *common.Message, cio conn) {
 								if ret.ResponseCode != OK {
 									log.Println("Got a bad return code from serial response: " + ret.Name + ", " + strconv.Itoa(ret.ResponseCode))
 									good = false
+									break //break out of the loop of instructions because something went wrong
 								}
 								log.Println("Serial job finished: " + ret.Name)
 							} else if b.Type == "parallel" {
