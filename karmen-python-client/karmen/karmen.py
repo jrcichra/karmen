@@ -260,6 +260,8 @@ class Client:
 
     def connect(self):
         self.socket.connect((self.host, self.port))
+
+    def ready(self):
         self.handleMessagesThread = threading.Thread(
             target=self.handleMessages)
         self.handleSendingThread = threading.Thread(
