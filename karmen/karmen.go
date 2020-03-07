@@ -100,7 +100,7 @@ func (cio *conn) buildResponse(msg *common.Message, code int, dispatched bool) {
 type Controller struct {
 	logger      *logging.Logger
 	config      *parser.Config
-	connections map[string]conn
+	connections map[string]*conn
 }
 
 /*
@@ -147,7 +147,7 @@ Example Messages:
 		Properties = nil
 */
 
-func (c *Controller) registerContainer(msg *common.Message, cio conn) {
+func (c *Controller) registerContainer(msg *common.Message, cio *conn) {
 	err := c.config.RegisterContainer(msg)
 	code := OK
 	if err != nil {
@@ -161,7 +161,7 @@ func (c *Controller) registerContainer(msg *common.Message, cio conn) {
 	cio.buildResponse(msg, code, false)
 }
 
-func (c *Controller) registerAction(msg *common.Message, cio conn) {
+func (c *Controller) registerAction(msg *common.Message, cio *conn) {
 	err := c.config.RegisterAction(msg)
 	code := OK
 	if err != nil {
@@ -172,7 +172,7 @@ func (c *Controller) registerAction(msg *common.Message, cio conn) {
 	cio.buildResponse(msg, code, false)
 }
 
-func (c *Controller) registerEvent(msg *common.Message, cio conn) {
+func (c *Controller) registerEvent(msg *common.Message, cio *conn) {
 	err := c.config.RegisterEvent(msg)
 	code := OK
 	if err != nil {
@@ -267,7 +267,7 @@ func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret ch
 }
 
 //handleEvent is the part of the controller responsible for goroutines that do all kinds of processes
-func (c *Controller) handleEvent(msg *common.Message, cio conn) {
+func (c *Controller) handleEvent(msg *common.Message, cio *conn) {
 	//The message we were given told use to emit an event
 	log.Println("We're starting event: ", msg.Name)
 
@@ -402,7 +402,7 @@ func (c *Controller) handleEvent(msg *common.Message, cio conn) {
 }
 
 //handleActionResponse - sends action response to proper connection's pseduo-input channel
-func (c *Controller) handleActionResponse(msg *common.Message, cio conn) {
+func (c *Controller) handleActionResponse(msg *common.Message, cio *conn) {
 	b, err := json.Marshal(msg)
 	if err != nil {
 		c.logger.Error(err)
@@ -411,7 +411,7 @@ func (c *Controller) handleActionResponse(msg *common.Message, cio conn) {
 	}
 }
 
-func (c *Controller) handleConnection(conn net.Conn, cio conn) {
+func (c *Controller) handleConnection(conn net.Conn, cio *conn) {
 	defer conn.Close()
 	c.logger.Infof("Handling %s\n", conn.RemoteAddr().String())
 	//Spin up a goroutine to write out to this connection (essentially an output queue)
@@ -497,13 +497,13 @@ func (c *Controller) Start(port int) {
 		cio.out = out
 		cio.in = in
 		// For every connection that comes in, start a goroutine to handle their inputs
-		go c.handleConnection(con, cio)
+		go c.handleConnection(con, &cio)
 	}
 }
 
 func main() {
 	c := Controller{}
-	c.connections = make(map[string]conn)
+	c.connections = make(map[string]*conn)
 	go func() {
 		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
 	}()
