@@ -27,6 +27,8 @@ k.registerContainer()
 k.registerEvent("docker_rocks")
 # Register an action with the karmen server
 k.registerAction("hello", hello)
+# Run this after you've registered everything
+k.ready()
 # Emit an event called docker_rocks - this is declared in config.yml
 k.emitEvent("docker_rocks")
 ```
