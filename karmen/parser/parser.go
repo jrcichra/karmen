@@ -540,10 +540,10 @@ func (c *Config) config(generic interface{}) (*Config, error) {
 						//if it is a map, loop through each event
 						for key, events := range e {
 							event, err := c.event(key, events)
-							c.EventsMap[event.EventName] = event
 							if err != nil {
 								panic(err)
 							}
+							c.EventsMap[event.EventName] = event
 							// spew.Dump(event)
 							// append event to event array
 							mainEvents = append(mainEvents, event)
