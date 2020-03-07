@@ -204,6 +204,9 @@ func (c *Controller) triggerSerialAction(act *parser.Action, id string) *common.
 	if err != nil {
 		panic(err) //was unable to build a message
 	}
+
+	c.waitTillOnline(act)
+
 	c.connections[act.Container].out <- b
 	log.Println("Sent action to " + act.Container)
 
@@ -235,6 +238,29 @@ func (c *Controller) findYourResponse(act *parser.Action) common.Message {
 	return retmsg
 }
 
+func (c *Controller) waitTillOnline(act *parser.Action) {
+	allOnline := false
+	for !allOnline {
+		check := true
+		//Make sure the container & action we want to send to is online
+		if c.config.Containers[act.Container].State == "offline" {
+			log.Println(act.Container + " is not registered (yet). Cannot send out action '" + act.Name + "'. Waiting a second before checking again.")
+			check = false
+		}
+		if c.config.Actions[act.Name].State == "offline" {
+			log.Println(act.Name + " is not registered (yet). Cannot send out action '" + act.Name + "'. Waiting a second before checking again.")
+			check = false
+		}
+		if !check {
+			//something wasn't online, sleep for a second and try again TODO exponential backoff?
+			time.Sleep(1 * time.Second)
+		} else {
+			//We can stop the loop, what we want is online
+			allOnline = true
+		}
+	}
+}
+
 //triggerParallelAction reaches out to a container and tells it to do something in parallel
 func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret chan common.Message) {
 	//TODO - actually trigger actions by reading the event config
@@ -257,7 +283,7 @@ func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret ch
 		panic(err) //was unable to build a message
 	}
 
-	//Make sure the container & action we want to send to is online
+	c.waitTillOnline(act)
 
 	c.connections[act.Container].out <- b
 	log.Println("Sent action to " + act.Container)
