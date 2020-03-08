@@ -241,8 +241,8 @@ class Client:
         #     Value interface{} `json:"value"`
         # }
         res = {}
-        for p in params:
-            res[p['name']] = p['value']
+        for k, v in params.items():
+            res[k] = params[k]['value']
         return res
 
     def handleMessages(self):
