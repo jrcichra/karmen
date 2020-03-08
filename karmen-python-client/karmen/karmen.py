@@ -253,7 +253,9 @@ class Client:
             if j['type'] == TRIGGERACTION:
                 # Make a result object for the user to return a value through
                 r = Result()
+                logging.info("Params before processing:{}".format(j['params']))
                 params = self.processParams(j['params'])
+                logging.info("Params after processing:{}".format(j['params']))
                 self.handleActionThread = CallbackThread(
                     target=self.actions[j['name']], args=(params, r), callback=self.sendActionResponse, callback_args=(j, r))
                 self.handleActionThread.start()
