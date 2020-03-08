@@ -20,15 +20,15 @@ const (
 
 //Container - container struct
 type Container struct {
-	Name  string
-	State string
+	Name  string `json:"name"`
+	State string `json:"state"`
 }
 
 //Parameter - Single parameter with a name and value (of any type)
 type Parameter struct {
-	Name  string
-	Type  string
-	Value interface{}
+	Name  string      `json:"name"`
+	Type  string      `json:"type"`
+	Value interface{} `json:"value"`
 }
 
 //Parameters - a map of parameter objects
@@ -42,10 +42,10 @@ type Operator string //==,<>,<=,>=
 
 //Condition - has one of several keywords that will conditionally execute an event's desired actions
 type Condition struct {
-	Type         string //when/and/else
-	Operator     Operator
-	LeftOperand  Operand
-	RightOperand Operand
+	Type         string   `json:"type"` //when/and/else
+	Operator     Operator `json:"operator"`
+	LeftOperand  Operand  `json:"leftoperand"`
+	RightOperand Operand  `json:"rightoperand"`
 }
 
 //Conditions - a slice of Condition objects
@@ -53,10 +53,10 @@ type Conditions []*Condition
 
 //Action - Tell a container to do something
 type Action struct {
-	State      string
-	Container  string
-	Name       string
-	Parameters Parameters
+	State      string     `json:"state"`
+	Container  string     `json:"container"`
+	Name       string     `json:"name"`
+	Parameters Parameters `json:"parameters"`
 }
 
 //Actions - a slice of action objects
@@ -64,8 +64,8 @@ type Actions []*Action
 
 //Block - instruction block
 type Block struct {
-	Type     string        //serial,parallel, or conditional (or more later)
-	Children []interface{} //Children of this block (check what type should go here and cast it at runtime)
+	Type     string        `json:"type"`     //serial,parallel, or conditional (or more later)
+	Children []interface{} `json:"children"` //Children of this block (check what type should go here and cast it at runtime)
 }
 
 //Blocks - a slice of block objects
@@ -73,10 +73,10 @@ type Blocks []*Block
 
 //Event - single event defined in a config
 type Event struct {
-	State         string
-	ContainerName string
-	EventName     string
-	Blocks        *Blocks
+	State         string  `json:"state"`
+	ContainerName string  `json:"container_name"`
+	EventName     string  `json:"event_name"`
+	Blocks        *Blocks `json:"blocks"`
 }
 
 //Events - a slice of event objects

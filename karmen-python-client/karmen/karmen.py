@@ -86,11 +86,11 @@ class Message:
     def getReponseCode(self):
         return self.response_code
 
-    def setProperties(self, p):
-        self.properties = p
+    def setParams(self, p):
+        self.params = p
 
-    def getProperties(self):
-        return self.properties
+    def getParams(self):
+        return self.params
 
     def setID(self, idee):
         self.id = idee
@@ -102,7 +102,7 @@ class Message:
         self.name = container_name
         self.timestamp = int(time.time())
         self.response_code = OK
-        self.properties = None
+        self.params = None
         self.type = REGISTERCONTAINER
         self.container_name = container_name
         self.id = None
@@ -111,7 +111,7 @@ class Message:
         self.name = event_name
         self.timestamp = int(time.time())
         self.response_code = OK
-        self.properties = None
+        self.params = None
         self.type = REGISTEREVENT
         self.container_name = container_name
         self.id = None
@@ -120,16 +120,16 @@ class Message:
         self.name = action_name
         self.timestamp = int(time.time())
         self.response_code = OK
-        self.properties = None
+        self.params = None
         self.type = REGISTERACTION
         self.container_name = container_name
         self.id = None
 
-    def makeEmitEvent(self, container_name, event_name, properties):
+    def makeEmitEvent(self, container_name, event_name, params):
         self.name = event_name
         self.timestamp = int(time.time())
         self.response_code = OK
-        self.properties = properties
+        self.params = params
         self.type = EMITEVENT
         self.container_name = container_name
         self.id = None
@@ -138,7 +138,7 @@ class Message:
         self.name = action_name
         self.timestamp = int(time.time())
         self.response_code = rc
-        self.properties = None
+        self.params = None
         self.type = TRIGGERACTIONRESPONSE
         self.container_name = container_name
         self.id = None
@@ -151,7 +151,7 @@ class Message:
         # 	ContainerName string      `json:"container_name"` //Container Name we want to address
         # 	Name          string      `json:"name"`           //Name of the event/action/container based on type
         # 	ResponseCode  int         `json:"response_code"`  //Response code (might be nil based on type)
-        # 	Properties    interface{} `json:"properties"`     //Properties attached to the event
+        # 	params    interface{} `json:"params"`     //params attached to the event
         #   ID            string      `json:"id"`             //Message IDs for the clients to keep track of their messages (passed thru)
         # }
         j = {
@@ -160,7 +160,7 @@ class Message:
             "container_name": self.container_name,
             "name": self.name,
             "response_code": self.response_code,
-            "properties": self.properties,
+            "params": self.params,
             "id": self.id
         }
         return json.dumps(j)
@@ -234,6 +234,17 @@ class Client:
             m.makeActionResponse(self.hostname, message['name'], ERROR)
         self.send(m.toJSONStr())
 
+    def processParams(self, params):
+        # type Parameter struct {
+        #     Name  string      `json:"name"`
+        #     Type  string      `json:"type"`
+        #     Value interface{} `json:"value"`
+        # }
+        res = {}
+        for p in params:
+            res[p['name']] = p['value']
+        return res
+
     def handleMessages(self):
         while True:
             j = self.receive()  # receive a message (hopefully blocks)
@@ -242,8 +253,9 @@ class Client:
             if j['type'] == TRIGGERACTION:
                 # Make a result object for the user to return a value through
                 r = Result()
+                params = self.processParams(j['params'])
                 self.handleActionThread = CallbackThread(
-                    target=self.actions[j['name']], args=(j['properties'], r), callback=self.sendActionResponse, callback_args=(j, r))
+                    target=self.actions[j['name']], args=(params, r), callback=self.sendActionResponse, callback_args=(j, r))
                 self.handleActionThread.start()
             elif j['type'] == DISPATCHEDEVENT:
                 # Event responses should be handled by a new thread based on the event id
@@ -327,10 +339,10 @@ class Client:
             logging.info(
                 "Sucessfully registered action {}".format(action_name))
 
-    def emitEvent(self, event_name, properties=None):
+    def emitEvent(self, event_name, params=None):
         # Build an emit-event message
         m = Message()
-        m.makeEmitEvent(self.hostname, event_name, properties)
+        m.makeEmitEvent(self.hostname, event_name, params)
         self.send(m.toJSONStr())
         response = self.inboundQueues[DISPATCHEDEVENT].get()
         logging.debug("response={}".format(response))
