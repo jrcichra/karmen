@@ -53,10 +53,10 @@ type Conditions []*Condition
 
 //Action - Tell a container to do something
 type Action struct {
-	State      string     `json:"state"`
-	Container  string     `json:"container"`
-	Name       string     `json:"name"`
-	Parameters Parameters `json:"parameters"`
+	State     string     `json:"state"`
+	Container string     `json:"container"`
+	Name      string     `json:"name"`
+	Params    Parameters `json:"params"`
 }
 
 //Actions - a slice of action objects
@@ -187,7 +187,7 @@ func (c *Config) splitter(s string) ([]string, error) {
 func (c *Config) action(actionName string, action interface{}) (*Action, error) {
 	var act Action
 	//Make sure the action's parameters map pointer is allocated also
-	act.Parameters = make(map[string]*Parameter)
+	act.Params = make(map[string]*Parameter)
 
 	act.Name = actionName
 	switch a := action.(type) {
@@ -237,7 +237,7 @@ func (c *Config) action(actionName string, action interface{}) (*Action, error) 
 											return nil, err
 										}
 										// append param to list of parameters for this action
-										act.Parameters[param.Name] = param
+										act.Params[param.Name] = param
 									default:
 										return nil, errors.New("Expected a string for the parameter name")
 									}

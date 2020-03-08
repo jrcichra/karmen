@@ -196,7 +196,7 @@ func (c *Controller) triggerSerialAction(act *parser.Action, id string) *common.
 	msg.Type = TRIGGERACTION
 	msg.Timestamp = time.Now().Unix()
 	msg.ContainerName = act.Container
-	msg.Properties = act.Parameters
+	msg.Params = act.Params
 	msg.Name = act.Name
 	msg.ID = id
 
@@ -274,7 +274,7 @@ func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret ch
 	msg.Type = TRIGGERACTION
 	msg.Timestamp = time.Now().Unix()
 	msg.ContainerName = act.Container
-	msg.Properties = act.Parameters
+	msg.Params = act.Params
 	msg.ID = id
 	msg.Name = act.Name
 
