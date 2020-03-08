@@ -283,7 +283,7 @@ class Client:
             logging.error(
                 "Got an error while receiving a message. Did the connection get severed?")
         logging.debug("msg={}".format(message))
-        return json.loads(message)
+        return json.loads(message.decode())
 
     def registerContainer(self):
         # Build a register-container message
