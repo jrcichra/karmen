@@ -14,12 +14,12 @@ import (
 	"github.com/jrcichra/karmen/karmen-go-client/message"
 )
 
-//Client - Karmen Client struct
-type Client struct {
-	Host                          string
-	Port                          int
+//Karmen - Karmen Client struct
+type Karmen struct {
+	host                          string
+	port                          int
 	conn                          net.Conn
-	Hostname                      string
+	hostname                      string
 	functions                     map[string]func(params map[string]interface{}, result *result.Result)
 	events                        map[string]chan message.Message
 	out                           chan message.Message
@@ -30,22 +30,22 @@ type Client struct {
 }
 
 //Start - Client Constructor of sorts
-func (c *Client) Start(host string, port int) {
+func (c *Karmen) Start(host string, port int) {
 	s, err := net.Dial("tcp", host+":"+strconv.Itoa(port))
 	if err != nil {
 		panic(err)
 	}
 	c.conn = s
-	c.Host = host
-	c.Hostname, err = os.Hostname()
+	c.host = host
+	c.hostname, err = os.Hostname()
 	if err != nil {
 		panic(err)
 	}
-	c.Port = port
+	c.port = port
 	go c.handleOutput()
 }
 
-func (c *Client) handleOutput() {
+func (c *Karmen) handleOutput() {
 	for {
 		m := <-c.out
 		b, err := json.Marshal(&m)
@@ -57,21 +57,21 @@ func (c *Client) handleOutput() {
 	}
 }
 
-func (c *Client) handleAction(actionName string, params map[string]interface{}, result *result.Result) {
+func (c *Karmen) handleAction(actionName string, params map[string]interface{}, result *result.Result) {
 	//run the action we are supposed to run
 	c.functions[actionName](params, result)
 	//whatever result is (because it's a pointer) should be the pass/fail of the function
 	log.Println("Result for action", actionName, "is:", result.GetResult())
 	var m message.Message
 	if result.GetResult() {
-		m.MakeActionResponse(c.Hostname, actionName, common.OK)
+		m.MakeActionResponse(c.hostname, actionName, common.OK)
 	} else {
-		m.MakeActionResponse(c.Hostname, actionName, common.ERROR)
+		m.MakeActionResponse(c.hostname, actionName, common.ERROR)
 	}
 	c.out <- m
 }
 
-func (c *Client) handleEvent(msg message.Message) {
+func (c *Karmen) handleEvent(msg message.Message) {
 	//Just wait for the event to be done
 	resp := <-c.events[msg.ID]
 	log.Println("Event", resp.Name, "finished with a return code of", resp.ResponseCode)
@@ -79,7 +79,7 @@ func (c *Client) handleEvent(msg message.Message) {
 	delete(c.events, msg.ID)
 }
 
-func (c *Client) processParams(params interface{}) map[string]interface{} {
+func (c *Karmen) processParams(params interface{}) map[string]interface{} {
 	res := make(map[string]interface{})
 	switch p := params.(type) {
 	case map[string]map[string]interface{}:
@@ -92,7 +92,7 @@ func (c *Client) processParams(params interface{}) map[string]interface{} {
 	return res
 }
 
-func (c *Client) handleMessages() {
+func (c *Karmen) handleMessages() {
 	for {
 		// read directly from the socket, expecting each json message to be newline separated
 		d := json.NewDecoder(c.conn)
@@ -134,9 +134,9 @@ func (c *Client) handleMessages() {
 }
 
 //RegisterContainer -
-func (c *Client) RegisterContainer() {
+func (c *Karmen) RegisterContainer() {
 	var m message.Message
-	m.MakeRegisterContainer(c.Hostname)
+	m.MakeRegisterContainer(c.hostname)
 	c.out <- m
 	resp := <-c.registerContainerResponseChan
 	log.Println("response=", resp)
@@ -148,9 +148,9 @@ func (c *Client) RegisterContainer() {
 }
 
 //RegisterEvent -
-func (c *Client) RegisterEvent(eventName string) {
+func (c *Karmen) RegisterEvent(eventName string) {
 	var m message.Message
-	m.MakeRegisterEvent(c.Hostname, eventName)
+	m.MakeRegisterEvent(c.hostname, eventName)
 	c.out <- m
 	resp := <-c.registerEventResponseChan
 	log.Println("response=", resp)
@@ -162,10 +162,10 @@ func (c *Client) RegisterEvent(eventName string) {
 }
 
 //RegisterAction -
-func (c *Client) RegisterAction(actionName string, actionFunction func(params map[string]interface{}, result *result.Result)) {
+func (c *Karmen) RegisterAction(actionName string, actionFunction func(params map[string]interface{}, result *result.Result)) {
 	c.functions[actionName] = actionFunction
 	var m message.Message
-	m.MakeRegisterAction(c.Hostname, actionName)
+	m.MakeRegisterAction(c.hostname, actionName)
 	c.out <- m
 	resp := <-c.registerActionResponseChan
 	log.Println("response=", resp)
@@ -177,9 +177,9 @@ func (c *Client) RegisterAction(actionName string, actionFunction func(params ma
 }
 
 //EmitEvent -
-func (c *Client) EmitEvent(eventName string, params interface{}) {
+func (c *Karmen) EmitEvent(eventName string, params interface{}) {
 	var m message.Message
-	m.MakeEmitEvent(c.Hostname, eventName, params)
+	m.MakeEmitEvent(c.hostname, eventName, params)
 	c.out <- m
 	resp := <-c.dispatchedEventChan
 	log.Println("response=", resp)
