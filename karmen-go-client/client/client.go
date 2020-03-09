@@ -1,4 +1,4 @@
-package client
+package karmen
 
 import (
 	"encoding/json"
