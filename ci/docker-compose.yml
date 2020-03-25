@@ -7,7 +7,7 @@ services:
     image: jrcichra/karmen:ci
     volumes:
       - "${PWD}/ci_config.yml:/config.yml"
-    python1:
+  python1:
     environment:
         TZ: "America/New_York"
     hostname: python1
