@@ -19,12 +19,12 @@ docker buildx inspect --bootstrap
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin 
 # Phase 3 - build a container based on the arg passed in
 cd karmen
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:ci .
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:ci --load .
 docker buildx imagetools inspect jrcichra/karmen:ci
 cd ..
 # Phase 4 - build the CI test container
 cd ci/python1
-docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/python1:ci .
+docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/python1:ci --load .
 cd ../..
 # Phase 5 - run the CI test docker-compose
 cd ci
