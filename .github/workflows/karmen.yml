@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v2
     - name: Build & Push Karmen
       run: |
-        bash -x ci.sh
+        bash -x ci/ci.sh
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}

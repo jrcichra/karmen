@@ -19,8 +19,18 @@ docker buildx inspect --bootstrap
 echo "$DOCKER_PASSWORD" | docker login --username "$DOCKER_USERNAME" --password-stdin 
 # Phase 3 - build a container based on the arg passed in
 cd karmen
-docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:${GITHUB_SHA:0:8} --push .
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:ci .
+docker buildx imagetools inspect jrcichra/karmen:ci
+cd ..
+# Phase 4 - build the CI test container
+cd ci/python1
+docker build -t jrcichra/python1:ci .
+cd ../..
+# Phase 5 - run the CI test docker-compose
+cd ci
+docker-compose up --exit-code-from python1
+# Phase 6 - if that passes push this sha and latest
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:${GITHUB_SHA:0:8} --push.
 docker buildx imagetools inspect jrcichra/karmen:${GITHUB_SHA:0:8}
-# Also update :latest (should be quick since we just built)
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:latest --push .
 docker buildx imagetools inspect jrcichra/karmen:latest

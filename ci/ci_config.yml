@@ -1,0 +1,9 @@
+events:
+    python1.event1:
+        - serial:
+                - python.action1
+                - python.action2
+    python1.event2:
+        - parallel:
+            - python.action1
+            - python.action2
