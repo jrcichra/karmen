@@ -24,7 +24,7 @@ docker buildx imagetools inspect jrcichra/karmen:ci
 cd ..
 # Phase 4 - build the CI test container
 cd ci/python1
-docker build -t jrcichra/python1:ci .
+docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/python1:ci .
 cd ../..
 # Phase 5 - run the CI test docker-compose
 cd ci
