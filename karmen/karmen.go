@@ -242,6 +242,12 @@ func (c *Controller) waitTillOnline(act *parser.Action) {
 	allOnline := false
 	for !allOnline {
 		check := true
+
+		log.Println("Checking if", act.Container, "is online")
+		log.Println("Keys that I know about:")
+		for i, v := range c.config.Containers {
+			log.Println(i, v.Name, "is currently", v.State)
+		}
 		//Make sure the container & action we want to send to is online
 		if c.config.Containers[act.Container].State == "offline" {
 			log.Println(act.Container + " is not registered (yet). Cannot send out action '" + act.Name + "'. Waiting a second before checking again.")
