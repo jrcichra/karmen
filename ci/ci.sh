@@ -29,6 +29,7 @@ cd ../..
 cd ci
 docker-compose up --exit-code-from python1
 # Phase 6 - if that passes push this sha and latest
+cd ../karmen
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:${GITHUB_SHA:0:8} --push .
 docker buildx imagetools inspect jrcichra/karmen:${GITHUB_SHA:0:8}
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:latest --push .
