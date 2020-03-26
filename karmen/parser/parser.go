@@ -270,6 +270,15 @@ func (c *Config) action(actionName string, action interface{}) (*Action, error) 
 		act.Name = split[1]
 		act.State = OFFLINE
 
+		//Make sure containers only defined as having actions are also accounted for
+		var cont Container
+		cont.Name = act.Container
+		cont.State = OFFLINE
+		c.Containers[cont.Name] = &cont
+
+		//add action to map of actions
+		c.Actions[act.Name] = &act
+
 	default:
 		return nil, errors.New("Action couldn't be recognized as a string or a map of parameters")
 	}
