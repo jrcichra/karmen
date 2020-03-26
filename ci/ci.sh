@@ -27,7 +27,7 @@ docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/python1:ci .
 cd ../..
 # Phase 5 - run the CI test docker-compose
 cd ci
-docker-compose up --exit-code-from python1
+docker-compose up --exit-code-from python
 # Phase 6 - if that passes push this sha and latest
 cd ../karmen
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:${GITHUB_SHA:0:8} --push .
