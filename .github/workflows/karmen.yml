@@ -22,4 +22,3 @@ jobs:
         INFLUX_URL: ${{ secrets.INFLUX_URL }}
         INFLUX_USERNAME: ${{ secrets.INFLUX_USERNAME }}
         INFLUX_PASSWORD: ${{ secrets.INFLUX_PASSWORD }}
-        
