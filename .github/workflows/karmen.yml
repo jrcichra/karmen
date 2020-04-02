@@ -11,14 +11,6 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-    - name: Start telegraf collection on linux
-      run: |
-        git clone https://github.com/jrcichra/gh-actions-telegraf-config
-        bash gh-actions-telegraf-config/telegraf.sh
-      env:
-        INFLUX_URL: ${{ secrets.INFLUX_URL }}
-        INFLUX_USERNAME: ${{ secrets.INFLUX_USERNAME }}
-        INFLUX_PASSWORD: ${{ secrets.INFLUX_PASSWORD }}
     - name: Check out code
       uses: actions/checkout@v2
     - name: Build & Push Karmen
@@ -27,3 +19,6 @@ jobs:
       env:
         DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
         DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        INFLUX_URL: ${{ secrets.INFLUX_URL }}
+        INFLUX_USERNAME: ${{ secrets.INFLUX_USERNAME }}
+        INFLUX_PASSWORD: ${{ secrets.INFLUX_PASSWORD }}

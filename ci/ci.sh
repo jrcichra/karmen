@@ -12,6 +12,8 @@ docker-compose --version
 docker buildx --help
 docker run --rm --privileged aptman/qus -s -- -p
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
+git clone https://github.com/jrcichra/gh-actions-telegraf-config
+bash gh-actions-telegraf-config/telegraf.sh
 docker buildx create --name testbuilder
 docker buildx use testbuilder
 docker buildx inspect --bootstrap
