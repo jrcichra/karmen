@@ -34,4 +34,3 @@ docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/
 docker buildx imagetools inspect jrcichra/karmen:${GITHUB_SHA:0:8}
 docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t jrcichra/karmen:latest --push .
 docker buildx imagetools inspect jrcichra/karmen:latest
-
