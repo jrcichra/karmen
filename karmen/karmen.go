@@ -497,6 +497,13 @@ func (c *Controller) readConfig() {
 	if err != nil {
 		panic(err)
 	}
+	file, err := os.Open("/config.yml")
+	if err != nil {
+		panic(err)
+	}
+	c.logger.Info("Config Dump:")
+	c.logger.Info(file)
+
 	c.config = config
 }
 
