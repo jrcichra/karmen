@@ -8,7 +8,7 @@ import (
 	"strconv"
 	"strings"
 
-	"gopkg.in/yaml.v3"
+	"gopkg.in/yaml.v2"
 )
 
 const (
@@ -118,7 +118,7 @@ func (c *Config) RegisterAction(msg *common.Message) error {
 	if value, ok := c.Actions[msg.Name]; ok {
 		value.State = ONLINE
 	} else {
-		err = errors.New("Could not find an action that matches one in the list for" + msg.Name)
+		err = errors.New("Could not find an action that matches one in the list for " + msg.Name)
 	}
 	return err
 }
