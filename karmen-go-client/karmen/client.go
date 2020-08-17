@@ -143,7 +143,7 @@ func (c *Karmen) RegisterContainer() {
 	if resp.ResponseCode != common.OK {
 		log.Println("While registering the container, we got a bad return code:", resp.ResponseCode)
 	} else {
-		log.Println("Succesfully registered container")
+		log.Println("Successfully registered container")
 	}
 }
 
@@ -157,7 +157,7 @@ func (c *Karmen) RegisterEvent(eventName string) {
 	if resp.ResponseCode != common.OK {
 		log.Println("While registering the event", resp.Name, ", we got a bad return code:", resp.ResponseCode)
 	} else {
-		log.Println("Succesfully registered event", resp.Name)
+		log.Println("Successfully registered event", resp.Name)
 	}
 }
 
@@ -172,7 +172,7 @@ func (c *Karmen) RegisterAction(actionName string, actionFunction func(params ma
 	if resp.ResponseCode != common.OK {
 		log.Println("While registering the action", resp.Name, ", we got a bad return code:", resp.ResponseCode)
 	} else {
-		log.Println("Succesfully registered action", resp.Name)
+		log.Println("Successfully registered action", resp.Name)
 	}
 }
 
@@ -186,6 +186,6 @@ func (c *Karmen) EmitEvent(eventName string, params interface{}) {
 	if resp.ResponseCode != common.OK {
 		log.Println("While emitting the event", resp.Name, ", we got a bad return code:", resp.ResponseCode)
 	} else {
-		log.Println("Succesfully emitted event", resp.Name)
+		log.Println("Successfully emitted event", resp.Name)
 	}
 }
