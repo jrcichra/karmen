@@ -5,6 +5,7 @@ import (
 	parser "controller/parser"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"log"
 	"net"
 	"net/http"
@@ -497,12 +498,12 @@ func (c *Controller) readConfig() {
 	if err != nil {
 		panic(err)
 	}
-	file, err := os.Open("/config.yml")
+	file, err := ioutil.ReadFile("/config.yml")
 	if err != nil {
 		panic(err)
 	}
 	c.logger.Info("Config Dump:")
-	c.logger.Info(file)
+	c.logger.Info(string(file))
 
 	c.config = config
 }
