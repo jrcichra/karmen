@@ -317,7 +317,6 @@ func (c *Controller) handleEvent(msg *common.Message, cio *conn) {
 	} else if event.State == "offline" {
 		log.Println(errors.New("Event " + event.EventName + " emitted before being registered"))
 	} else {
-		log.Println("We're starting event:", msg.Name)
 		//We have a valid event we can analyze
 		blocks := *event.Blocks
 		run := true  //See if the conditionals warrant a run of this event
