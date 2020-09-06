@@ -185,7 +185,7 @@ func (c *Controller) registerEvent(msg *common.Message, cio *conn) {
 }
 
 //triggerSerialAction reaches out to a container and tells it to do something serially
-func (c *Controller) triggerSerialAction(act *parser.Action, id string) *common.Message {
+func (c *Controller) triggerSerialAction(act *parser.Action, params map[string]*parser.Parameter, id string) *common.Message {
 	//TODO - actually trigger actions by reading the event config
 	var err error
 	var msg common.Message
@@ -197,7 +197,16 @@ func (c *Controller) triggerSerialAction(act *parser.Action, id string) *common.
 	msg.Type = TRIGGERACTION
 	msg.Timestamp = time.Now().Unix()
 	msg.ContainerName = act.Container
-	msg.Params = act.Params
+	msg.Params = params
+	switch p := msg.Params.(type) {
+	case map[string]*parser.Parameter:
+		for k, v := range act.Params {
+			p[k] = v
+		}
+	default:
+		panic("triggerSerialAction is struggling with parameter type")
+	}
+
 	msg.Name = act.Name
 	msg.ID = id
 
@@ -269,7 +278,7 @@ func (c *Controller) waitTillOnline(act *parser.Action) {
 }
 
 //triggerParallelAction reaches out to a container and tells it to do something in parallel
-func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret chan common.Message) {
+func (c *Controller) triggerParallelAction(act *parser.Action, params map[string]*parser.Parameter, id string, ret chan common.Message) {
 	//TODO - actually trigger actions by reading the event config
 	var err error
 	var msg common.Message
@@ -281,7 +290,16 @@ func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret ch
 	msg.Type = TRIGGERACTION
 	msg.Timestamp = time.Now().Unix()
 	msg.ContainerName = act.Container
-	msg.Params = act.Params
+	msg.Params = params
+	switch p := msg.Params.(type) {
+	case map[string]*parser.Parameter:
+		for k, v := range act.Params {
+			p[k] = v
+		}
+	default:
+		panic("triggerParallelAction is struggling with parameter type")
+	}
+
 	msg.ID = id
 	msg.Name = act.Name
 
@@ -297,6 +315,41 @@ func (c *Controller) triggerParallelAction(act *parser.Action, id string, ret ch
 
 	retmsg := c.findYourResponse(act)
 	ret <- retmsg
+}
+
+//parseEventParams - try to convert an interface{} into a parameter listing. The params should be passed in and parsed as json key value pairs
+func (c *Controller) parseEventParams(passedParams interface{}) map[string]*parser.Parameter {
+	//parameters - action takes priority over emitted keys
+	var params map[string]*parser.Parameter
+	switch p := passedParams.(type) {
+	case map[string]string:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "string"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]bool:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "bool"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]interface{}:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	default:
+		panic("parseEventParams failed to determine message parameters")
+	}
+	return params
 }
 
 //handleEvent is the part of the controller responsible for goroutines that do all kinds of processes
@@ -375,9 +428,11 @@ func (c *Controller) handleEvent(msg *common.Message, cio *conn) {
 					for _, children := range b.Children {
 						switch act := children.(type) {
 						case *parser.Action:
+							//Parse the params given by the event
+							params := c.parseEventParams(msg.Params)
 							log.Println("About to execute '" + act.Name + "' in " + b.Type)
 							if b.Type == "serial" {
-								ret := c.triggerSerialAction(act, uuid)
+								ret := c.triggerSerialAction(act, params, uuid)
 								if ret.ResponseCode != OK {
 									log.Println("Got a bad return code from serial response: " + ret.Name + ", " + strconv.Itoa(ret.ResponseCode))
 									good = false
@@ -388,7 +443,7 @@ func (c *Controller) handleEvent(msg *common.Message, cio *conn) {
 								channel := make(chan common.Message)
 								//Keep track of all the channels we've made that will be returning something
 								channels = append(channels, channel)
-								go c.triggerParallelAction(act, uuid, channel)
+								go c.triggerParallelAction(act, params, uuid, channel)
 							} else {
 								good = false
 								log.Println("Found serial/parallel earlier but now can't find it, this must be a coder error")
