@@ -342,7 +342,47 @@ func (c *Controller) parseEventParams(passedParams interface{}) map[string]*pars
 			par.Value = v
 			params[k] = par
 		}
-	case map[string]interface{}:
+	case map[string]float32:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]float64:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]int:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]int16:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]int32:
+		for k, v := range p {
+			par := &parser.Parameter{}
+			par.Name = k
+			par.Type = "number"
+			par.Value = v
+			params[k] = par
+		}
+	case map[string]int64:
 		for k, v := range p {
 			par := &parser.Parameter{}
 			par.Name = k
