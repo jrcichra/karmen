@@ -12,3 +12,8 @@ services:
         TZ: "America/New_York"
     hostname: python
     image: jrcichra/python1:ci
+  go:
+    environment:
+        TZ: "America/New_York"
+    hostname: go
+    image: jrcichra/go1:ci

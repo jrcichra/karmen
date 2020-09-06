@@ -30,7 +30,12 @@ type Karmen struct {
 }
 
 //Start - Client Constructor of sorts
-func (c *Karmen) Start(host string, port int) {
+func (c *Karmen) Start() {
+	c.StartWithHost("karmen", 8080)
+}
+
+//StartWithHost - Client Constructor of sorts, with args
+func (c *Karmen) StartWithHost(host string, port int) {
 	s, err := net.Dial("tcp", host+":"+strconv.Itoa(port))
 	if err != nil {
 		panic(err)

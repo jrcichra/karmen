@@ -12,8 +12,6 @@ docker-compose --version
 docker buildx --help
 docker run --rm --privileged aptman/qus -s -- -p
 cat /proc/sys/fs/binfmt_misc/qemu-aarch64
-git clone https://github.com/jrcichra/gh-actions-telegraf
-bash gh-actions-telegraf/telegraf.sh
 docker buildx create --name testbuilder
 docker buildx use testbuilder
 docker buildx inspect --bootstrap
@@ -26,6 +24,9 @@ cd ..
 # Phase 4 - build the CI test container
 cd ci/python1
 docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/python1:ci .
+cd ../..
+cd ci/go1
+docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/go1:ci .
 cd ../..
 # Phase 5 - run the CI test docker-compose
 cd ci
