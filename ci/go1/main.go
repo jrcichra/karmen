@@ -18,7 +18,7 @@ func a1(params map[string]interface{}, result *result.Result) {
 func main() {
 	fmt.Println("Hello, world!")
 	k := &karmen.Karmen{}
-	k.Start("karmen", 8080)
+	k.Start()
 	k.RegisterContainer()
 	k.RegisterEvent("e1")
 	k.RegisterAction("a1", a1)
