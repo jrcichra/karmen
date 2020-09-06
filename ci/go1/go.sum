@@ -6,3 +6,7 @@ github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906150151-d4d3268e4068 h
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906150151-d4d3268e4068/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906193001-1b7b147a2d9e h1:+Yn7kMB37od2uongQvmgL9cN4kNF0ZzqDHz7t+r+TRs=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906193001-1b7b147a2d9e/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906194554-a31ce7ecccd2 h1:IdZ00TBLDTHQCVI5U2oy108EK7WgxmBDrskmQfLjVOI=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906194554-a31ce7ecccd2/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906201912-83225bdca2f5 h1:2VaHIOd3hxBhrf3j49j0sL7cMnCYZlLLyyKbsnb2fss=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906201912-83225bdca2f5/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=

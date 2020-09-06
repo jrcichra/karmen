@@ -47,7 +47,13 @@ func (c *Karmen) StartWithHost(host string, port int) {
 		panic(err)
 	}
 	c.port = port
+	//make all the channels
 	c.out = make(chan message.Message)
+	c.dispatchedEventChan = make(chan message.Message)
+	c.registerActionResponseChan = make(chan message.Message)
+	c.registerContainerResponseChan = make(chan message.Message)
+	c.registerEventResponseChan = make(chan message.Message)
+	//handle output forever
 	go c.handleOutput()
 }
 
