@@ -321,7 +321,7 @@ func (c *Controller) triggerParallelAction(act *parser.Action, params map[string
 //parseEventParams - try to convert an interface{} into a parameter listing. The params should be passed in and parsed as json key value pairs
 func (c *Controller) parseEventParams(passedParams interface{}) map[string]*parser.Parameter {
 	//parameters - action takes priority over emitted keys
-	var params map[string]*parser.Parameter
+	params := make(map[string]*parser.Parameter)
 	//Debug print
 	log.Println("passedParams:")
 	spew.Dump(passedParams)
