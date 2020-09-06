@@ -20,7 +20,7 @@ k.registerAction("action1", action1)
 k.registerAction("action2", action2)
 
 time.sleep(5)
-k.emitEvent("event1")
+k.emitEvent("event1",params={"a":"parameter"})
 time.sleep(5)
 k.emitEvent("event2")
 time.sleep(5)

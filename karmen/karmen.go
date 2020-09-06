@@ -14,6 +14,7 @@ import (
 	"strconv"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	"github.com/jinzhu/copier"
 	"github.com/op/go-logging"
 )
@@ -321,6 +322,9 @@ func (c *Controller) triggerParallelAction(act *parser.Action, params map[string
 func (c *Controller) parseEventParams(passedParams interface{}) map[string]*parser.Parameter {
 	//parameters - action takes priority over emitted keys
 	var params map[string]*parser.Parameter
+	//Debug print
+	log.Println("passedParams:")
+	spew.Dump(passedParams)
 	switch p := passedParams.(type) {
 	case map[string]string:
 		for k, v := range p {
@@ -347,7 +351,8 @@ func (c *Controller) parseEventParams(passedParams interface{}) map[string]*pars
 			params[k] = par
 		}
 	default:
-		panic("parseEventParams failed to determine message parameters")
+		//More of a debug message for now...
+		log.Println("parseEventParams believes there are no parameters given for this event emission. Continuing...")
 	}
 	return params
 }
