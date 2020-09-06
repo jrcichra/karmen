@@ -55,6 +55,8 @@ func (c *Karmen) StartWithHost(host string, port int) {
 	c.registerEventResponseChan = make(chan message.Message)
 	//handle output forever
 	go c.handleOutput()
+	//handle incoming messages forever
+	go c.handleMessages()
 }
 
 func (c *Karmen) handleOutput() {
