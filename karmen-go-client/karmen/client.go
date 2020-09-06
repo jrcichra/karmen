@@ -47,6 +47,7 @@ func (c *Karmen) StartWithHost(host string, port int) {
 		panic(err)
 	}
 	c.port = port
+	c.out = make(chan message.Message)
 	go c.handleOutput()
 }
 

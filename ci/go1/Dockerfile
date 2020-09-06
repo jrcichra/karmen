@@ -5,4 +5,5 @@ RUN go build -o go1 .
 FROM alpine:3.11
 WORKDIR /go1
 COPY --from=firststage /go1/go1 .
+EXPOSE 6060
 CMD ["./go1"]

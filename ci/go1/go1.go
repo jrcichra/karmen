@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"log"
+	"net/http"
+	_ "net/http/pprof"
 
 	"github.com/davecgh/go-spew/spew"
 	"github.com/jrcichra/karmen/karmen-go-client/karmen"
@@ -16,6 +18,10 @@ func a1(params map[string]interface{}, result *result.Result) {
 }
 
 func main() {
+	go func() {
+		log.Println(http.ListenAndServe("0.0.0.0:6060", nil))
+	}()
+
 	fmt.Println("Hello, world!")
 	k := &karmen.Karmen{}
 	k.Start()
