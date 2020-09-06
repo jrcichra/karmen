@@ -326,67 +326,20 @@ func (c *Controller) parseEventParams(passedParams interface{}) map[string]*pars
 	log.Println("passedParams:")
 	spew.Dump(passedParams)
 	switch p := passedParams.(type) {
-	case map[string]string:
+	case map[string]interface{}:
 		for k, v := range p {
 			par := &parser.Parameter{}
 			par.Name = k
-			par.Type = "string"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]bool:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "bool"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]float32:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]float64:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]int:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]int16:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]int32:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
-			par.Value = v
-			params[k] = par
-		}
-	case map[string]int64:
-		for k, v := range p {
-			par := &parser.Parameter{}
-			par.Name = k
-			par.Type = "number"
+			switch v.(type) {
+			case string:
+				par.Type = "string"
+			case bool:
+				par.Type = "bool"
+			case float32, float64, int, int16, int32, int64:
+				par.Type = "number"
+			default:
+				panic("parseEventParams didn't understand the type on the other side of the interface")
+			}
 			par.Value = v
 			params[k] = par
 		}
@@ -394,6 +347,7 @@ func (c *Controller) parseEventParams(passedParams interface{}) map[string]*pars
 		//More of a debug message for now...
 		log.Println("parseEventParams believes there are no parameters given for this event emission. Continuing...")
 	}
+	spew.Dump(params)
 	return params
 }
 
