@@ -64,6 +64,7 @@ func (c *Karmen) StartWithHost(host string, port int) {
 func (c *Karmen) handleOutput() {
 	for {
 		m := <-c.out
+		log.Println("sending out: ", m)
 		b, err := json.Marshal(&m)
 		if err != nil {
 			panic(err)
