@@ -2,6 +2,7 @@ github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c
 github.com/davecgh/go-spew v1.1.1/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/jrcichra/karmen v0.0.0-20200906150151-d4d3268e4068 h1:TioSEeT5H8QfsJVg7u+yhgZaAocu7Njdpvj32lMm47U=
 github.com/jrcichra/karmen v0.0.0-20200906193001-1b7b147a2d9e h1:bSZcMNFjKhHpjvNYR/tpwdMAvySafyibPEC6kW+4OzE=
+github.com/jrcichra/karmen v0.0.0-20200906203143-a654635b081c h1:ehxdmECXIp8eqgSq08owhuU4HNtOHizOQnMa5GtcCG0=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906150151-d4d3268e4068 h1:JGW8GuznGyuo52XNfYSe5467VyJ2d+K8GSe6WLq2bXM=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906150151-d4d3268e4068/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906193001-1b7b147a2d9e h1:+Yn7kMB37od2uongQvmgL9cN4kNF0ZzqDHz7t+r+TRs=
@@ -12,3 +13,5 @@ github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906201912-83225bdca2f5 h
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906201912-83225bdca2f5/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906202641-9f2d5f8b688a h1:2IEdKa5JtalFRRoaoCMNlHvF1fGRpzjClZ/ya8sNbw8=
 github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906202641-9f2d5f8b688a/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906203143-a654635b081c h1:KokN93gD575c3PBgHWujS96LPh6TkpPpw5yor2V6MNA=
+github.com/jrcichra/karmen/karmen-go-client v0.0.0-20200906203143-a654635b081c/go.mod h1:qHjQMjkW+Kc3vLsVuhz7J61ncEWAQMXa2GX+sq6d7H8=
