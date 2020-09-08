@@ -2,3 +2,4 @@ karmen-python-client/dist
 karmen/controller
 karmen-go-client/karmen-go-client
 ci/go1/go1
+karmen-node-client/node_modules/
