@@ -8,13 +8,13 @@ import (
 
 //Message - handling message functions
 type Message struct {
-	Type          string
-	Timestamp     int64
-	ContainerName string
-	Name          string
-	ResponseCode  int
-	Params        interface{}
-	ID            string
+	Type          string      `json:"type"`           //Type of message being sent
+	Timestamp     int64       `json:"timestamp"`      //What time this message was created
+	ContainerName string      `json:"container_name"` //Container Name we want to address
+	Name          string      `json:"name"`           //Name of the event/action/container based on type
+	ResponseCode  int         `json:"response_code"`  //Response code (might be nil based on type)
+	Params        interface{} `json:"params"`         //Params attached to the event
+	ID            string      `json:"id"`             //Message IDs for the clients to keep track of their messages (passed thru)
 }
 
 // MakeRegisterContainer -
