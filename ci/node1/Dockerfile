@@ -1,5 +1,5 @@
-FROM node:alpine
+FROM node:13-alpine
 WORKDIR /app
-COPY . .
+COPY node1.js package.json yarn.lock ./
 RUN yarn install
-CMD ["node node1.js"]
+CMD ["yarn start"]   

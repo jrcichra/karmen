@@ -7,6 +7,6 @@
     "karmen-node-client": "^1.0.7"
   },
   "scripts": {
-    "app": "node node01.js"
+    "start": "node node1.js"
   }
 }
