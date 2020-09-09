@@ -1,4 +1,4 @@
 FROM node:alpine
-ADD . .
+ADD . /
 RUN yarn install
-CMD ["node node1.js"]
+CMD ["node /node1.js"]
