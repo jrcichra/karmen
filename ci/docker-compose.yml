@@ -9,17 +9,24 @@ services:
       - "${PWD}/ci_config.yml:/config.yml"
   python:
     environment:
-        TZ: "America/New_York"
+      TZ: "America/New_York"
     hostname: python
     image: jrcichra/python1:ci
-    depends_on: 
+    depends_on:
       - karmen
   go:
     environment:
-        TZ: "America/New_York"
+      TZ: "America/New_York"
     hostname: go
     image: jrcichra/go1:ci
-    depends_on: 
+    depends_on:
       - karmen
     ports:
       - 6060:6060
+  node:
+    environment:
+      TZ: "America/New_York"
+    hostname: node
+    image: jrcichra/node1:ci
+    depends_on:
+      - karmen
