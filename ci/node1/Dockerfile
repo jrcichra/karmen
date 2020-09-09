@@ -1,4 +1,5 @@
 FROM node:alpine
-ADD . /
+WORKDIR /app
+COPY . .
 RUN yarn install
-CMD ["node /node1.js"]
+CMD ["node node1.js"]
