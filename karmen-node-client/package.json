@@ -8,8 +8,5 @@
   "license": "MIT",
   "dependencies": {
     "log4js": "^6.3.0"
-  },
-  "scripts": {
-    "karmen": "node karmen-client.js"
   }
 }

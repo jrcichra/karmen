@@ -28,6 +28,9 @@ cd ../..
 cd ci/go1
 docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/go1:ci .
 cd ../..
+cd ci/node1
+docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/node1:ci .
+cd ../..
 # Phase 5 - run the CI test docker-compose
 cd ci
 timeout 120 docker-compose up --exit-code-from python

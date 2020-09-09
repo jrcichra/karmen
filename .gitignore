@@ -3,3 +3,6 @@ karmen/controller
 karmen-go-client/karmen-go-client
 ci/go1/go1
 karmen-node-client/node_modules/
+ci/node1/node_modules/
+ci/node1/yarn-error.log
+karmen-node-client/yarn-error.log

@@ -1,0 +1,12 @@
+{
+  "name": "node1",
+  "version": "1.0.0",
+  "main": "node1.js",
+  "license": "MIT",
+  "dependencies": {
+    "karmen-node-client": "^1.0.7"
+  },
+  "scripts": {
+    "app": "node node01.js"
+  }
+}

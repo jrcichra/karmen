@@ -21,6 +21,7 @@ const os = require('os');
 const net = require('net');
 const log4js = require("log4js");
 const { finished } = require('stream')
+const { timeStamp } = require('console')
 const logger = log4js.getLogger();
 logger.level = "debug";
 
@@ -30,55 +31,55 @@ class Message {
         this.timestamp = new Date().valueOf();
         this.response_code = OK;
         this.params = undefined;
-        self.type = REGISTERCONTAINER;
-        self.container_name = container_name;
-        self.id = undefined;
+        this.type = REGISTERCONTAINER;
+        this.container_name = container_name;
+        this.id = undefined;
     }
     makeRegisterEvent(container_name, event_name) {
         this.name = event_name;
         this.timestamp = new Date().valueOf();
         this.response_code = OK;
         this.params = undefined;
-        self.type = REGISTEREVENT;
-        self.container_name = container_name;
-        self.id = undefined;
+        this.type = REGISTEREVENT;
+        this.container_name = container_name;
+        this.id = undefined;
     }
     makeRegisterAction(container_name, action_name) {
         this.name = action_name;
         this.timestamp = new Date().valueOf();
         this.response_code = OK;
         this.params = undefined;
-        self.type = REGISTERACTION;
-        self.container_name = container_name;
-        self.id = undefined;
+        this.type = REGISTERACTION;
+        this.container_name = container_name;
+        this.id = undefined;
     }
     makeEmitEvent(container_name, event_name, params) {
         this.name = event_name;
         this.timestamp = new Date().valueOf();
         this.response_code = OK;
         this.params = params;
-        self.type = EMITEVENT;
-        self.container_name = container_name;
-        self.id = undefined;
+        this.type = EMITEVENT;
+        this.container_name = container_name;
+        this.id = undefined;
     }
     makeActionResponse(container_name, action_name, rc) {
         this.name = action_name;
         this.timestamp = new Date().valueOf();
         this.response_code = rc;
         this.params = undefined;
-        self.type = TRIGGERACTIONRESPONSE;
-        self.container_name = container_name;
-        self.id = undefined;
+        this.type = TRIGGERACTIONRESPONSE;
+        this.container_name = container_name;
+        this.id = undefined;
     }
     toJSONStr() {
         let j = {
-            "type": self.type,
-            "timestamp": self.timestamp,
-            "container_name": self.container_name,
-            "name": self.name,
-            "response_code": self.response_code,
-            "params": self.params,
-            "id": self.id
+            "type": this.type,
+            "timestamp": this.timestamp,
+            "container_name": this.container_name,
+            "name": this.name,
+            "response_code": this.response_code,
+            "params": this.params,
+            "id": this.id
         }
         return JSON.stringify(j);
     }
@@ -91,10 +92,10 @@ class Result {
         this.status = this.PASS;
     }
     Pass() {
-        this.status = self.PASS;
+        this.status = this.PASS;
     }
     Fail() {
-        this.status = self.FAIL;
+        this.status = this.FAIL;
     }
     getResult() {
         return this.status;
@@ -107,18 +108,9 @@ class Client {
         this.port = port;
         this.socket = new net.Socket();
         this.hostname = os.hostname();
-        // this.inboundQueues = {
-        //     REGISTERCONTAINERRESPONSE: queue(),
-        //     REGISTEREVENTRESPONSE: queue(),
-        //     REGISTERACTIONRESPONSE: queue(),
-        //     EMITEVENTRESPONSE: queue(),
-        //     DISPATCHEDEVENT: queue()
-        // };
-        // this.outboundQueue = queue();
         this.actions = {};
-        this.currentEvents = {};
         //Connection logic
-        client.connect(this.port, this.host, () => {
+        this.socket.connect(this.port, this.host, () => {
             logger.info(`Connected to ${this.host} on port ${this.port}`);
         });
         //Handle data logic
@@ -134,11 +126,18 @@ class Client {
                     this.handleDispatchedEvent(j);
                     break;
                 case EMITEVENTRESPONSE:
-                    // Tell the event that the event is done
-                    this.eventQueues()
+                    this.handleEmitEventResponse(j);
                     break;
+                case REGISTERCONTAINERRESPONSE:
+                    this.handleRegisterContainerResponse(j);
+                    break;
+                case REGISTEREVENTRESPONSE:
+                    this.handleRegisterEventResponse(j);
+                    break;
+                case REGISTERACTIONRESPONSE:
+                    this.handleRegisterActionResponse(h);
                 default:
-                // Put it in the inbound queue
+                    logger.error(`Got unexpected message from karmen: ${j}`);
             }
         });
     }
@@ -152,7 +151,7 @@ class Client {
 
     sendActionResponse(message, r) {
         logger.debug(`sendActionResponse got an r of ${r.getResult()}`);
-        let m = Message();
+        let m = new Message();
         if (r.getResult()) {
             m.makeActionResponse(this.hostname, message['name'], OK);
         } else {
@@ -161,28 +160,90 @@ class Client {
         this.send(m.toJSONStr());
     }
 
+    handleEmitEventResponse(j) {
+        logger.info(`Event ${j['name']} finished with a return code of ${j['response_code']}`);
+    }
+
+    handleRegisterEventResponse(j) {
+        logger.debug(`response=${j}`);
+        if (j['response_code'] != OK) {
+            logger.error(`While registering the event, we got a bad return code: ${j['response_code']}`);
+        } else {
+            logger.info(`Sucessfully registered event ${j['name']}`);
+        }
+    }
+
+    handleRegisterActionResponse(j) {
+        logger.debug(`response=${j}`);
+        if (j['response_code'] != OK) {
+            logger.error(`While registering the action, we got a bad return code: ${j['response_code']}`);
+        } else {
+            logger.info(`Sucessfully registered action ${j['name']}`);
+        }
+    }
+
     handleTriggerAction(j) {
         let r = Result();
         logger.info(`Params before processing:${j['params']}`);
         let params = this.processParams(j['params']);
         logger.info(`Params after processing:${params}`);
-        // Use a promise to handle their custom action, then to get the result back
-        new Promise(this.actions[j['name']](j, r)).then((j, r) => {
-            this.sendActionResponse(j, r);
-        });
-
+        //Spawn the event and send an action response after its completed
+        (async () => {
+            await this.actions[j['name']](params, r);
+            await this.sendActionResponse(j, r);
+        })();
     }
 
-    handleDispatchedEvent(j, message) {
-        let id = message['id'];
-        logger.info(`Event ${j['name']} was dispatched to us!`);
-        //Figure out when the event is over
+    handleDispatchedEvent(j) {
+        logger.debug(`response=${j}`);
+        if (j['response_code'] != OK) {
+            logger.error(`While emitting the event ${j['name']}, we got a bad return code: ${j['response_code']}`);
+        } else {
+            logger.info(`Sucessfully emitted event ${j['name']}`);
+        }
+    }
 
-        logger.info(`Event ${j['name']} finished with a return code of ${}`)
+    handleRegisterContainerResponse(j) {
+        logger.debug(`response=${j}`);
+        if (j['response_code'] != OK) {
+            logger.error(`While registering the container, we got a bad return code: ${j['response_code']}`);
+        } else {
+            logger.info("Sucessfully registered container");
+        }
     }
 
     send(string) {
         this.socket.write(string);
     }
 
+    registerContainer() {
+        let m = new Message();
+        m.makeRegisterContainer(this.hostname);
+        this.send(m.toJSONStr());
+    }
+
+    registerEvent(event_name) {
+        let m = new Message();
+        m.makeRegisterEvent(this.hostname, event_name);
+        this.send(m.toJSONStr());
+    }
+
+    registerAction(action_name, action_function) {
+        let m = new Message();
+        m.makeRegisterAction(this.hostname, action_name);
+        this.send(m.toJSONStr());
+    }
+
+    emitEvent(event_name, params = {}) {
+        let m = new Message();
+        m.makeEmitEvent(this.hostname, event_name, params);
+        this.send(m.toJSONStr());
+    }
+
+
+}
+
+module.exports = {
+    Client: Client,
+    Result: Result
 }
