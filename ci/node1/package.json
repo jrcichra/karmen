@@ -4,7 +4,7 @@
   "main": "node1.js",
   "license": "MIT",
   "dependencies": {
-    "karmen-node-client": "^1.0.7"
+    "karmen-node-client": "^1.0.10"
   },
   "scripts": {
     "start": "node node1.js"

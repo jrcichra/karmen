@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+carrier@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/carrier/-/carrier-0.3.0.tgz#bd295d1d3a7524cac63dd779b929ee22a362bad4"
+  integrity sha1-vSldHTp1JMrGPdd5uSnuIqNiutQ=
+
 date-format@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-2.1.0.tgz#31d5b5ea211cf5fd764cd38baf9d033df7e125cf"
@@ -45,11 +50,12 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-karmen-node-client@^1.0.7:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.7.tgz#b10dfa8616ed3d0a4395f0c1ed51cc359fe82f41"
-  integrity sha512-Hm6kCLlgwtCAPl+E162Ym3sH4it5XjObsfyaPs0aO+oG/vgh7Aukszu0cF6KuTjUV/zzttqJGpcfbj9EZH/xdQ==
+karmen-node-client@^1.0.10:
+  version "1.0.10"
+  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.10.tgz#c369326d36c571cf00800d37a4036f2a7c1e3063"
+  integrity sha512-dkMRJhDivbTtlBxo0M7l9KdwimVXct4Rbx9p5RpDnipTNsvCIKtYFsh3HioCPQMx5PmvjAXrIeQLV7L2ZvtfiA==
   dependencies:
+    carrier "^0.3.0"
     log4js "^6.3.0"
 
 log4js@^6.3.0:

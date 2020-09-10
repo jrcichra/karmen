@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+carrier@^0.3.0:
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/carrier/-/carrier-0.3.0.tgz#bd295d1d3a7524cac63dd779b929ee22a362bad4"
+  integrity sha1-vSldHTp1JMrGPdd5uSnuIqNiutQ=
+
 date-format@^2.1.0:
   version "2.1.0"
   resolved "https://registry.yarnpkg.com/date-format/-/date-format-2.1.0.tgz#31d5b5ea211cf5fd764cd38baf9d033df7e125cf"

@@ -19,9 +19,8 @@ const OFFLINE = "offline"
 
 const os = require('os');
 const net = require('net');
-const log4js = require("log4js");
-const { finished } = require('stream')
-const { timeStamp } = require('console')
+const carrier = require('carrier');
+const log4js = require('log4js');
 const logger = log4js.getLogger();
 logger.level = "debug";
 
@@ -107,6 +106,7 @@ class Client {
         this.host = host;
         this.port = port;
         this.socket = new net.Socket();
+        this.carrier = carrier.carry(this.socket);      //carrier will wrap the socket and won't fire an event until a line comes through
         this.hostname = os.hostname();
         this.actions = {};
         //Connection logic
@@ -114,8 +114,8 @@ class Client {
             logger.info(`Connected to ${this.host} on port ${this.port}`);
         });
         //Handle data logic
-        this.socket.on('data', (data) => {
-            logger.debug(`Received: ${data}`);
+        this.carrier.on('line', (data) => {
+            logger.debug(`Received: '${data}'`);
             let j = JSON.parse(data);
             //Break out which function processes this data based on type
             switch (j['type']) {
@@ -165,7 +165,7 @@ class Client {
     }
 
     handleRegisterEventResponse(j) {
-        logger.debug(`response=${j}`);
+        logger.debug(`response=${JSON.stringify(j)}`);
         if (j['response_code'] != OK) {
             logger.error(`While registering the event, we got a bad return code: ${j['response_code']}`);
         } else {
@@ -174,7 +174,7 @@ class Client {
     }
 
     handleRegisterActionResponse(j) {
-        logger.debug(`response=${j}`);
+        logger.debug(`response=${JSON.stringify(j)}`);
         if (j['response_code'] != OK) {
             logger.error(`While registering the action, we got a bad return code: ${j['response_code']}`);
         } else {
@@ -195,7 +195,7 @@ class Client {
     }
 
     handleDispatchedEvent(j) {
-        logger.debug(`response=${j}`);
+        logger.debug(`response=${JSON.stringify(j)}`);
         if (j['response_code'] != OK) {
             logger.error(`While emitting the event ${j['name']}, we got a bad return code: ${j['response_code']}`);
         } else {
@@ -204,7 +204,7 @@ class Client {
     }
 
     handleRegisterContainerResponse(j) {
-        logger.debug(`response=${j}`);
+        logger.debug(`response=${JSON.stringify(j)}`);
         if (j['response_code'] != OK) {
             logger.error(`While registering the container, we got a bad return code: ${j['response_code']}`);
         } else {
