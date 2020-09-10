@@ -1,6 +1,6 @@
 {
   "name": "karmen-node-client",
-  "version": "1.0.18",
+  "version": "1.0.19",
   "description": "Node client for the Karmen framework",
   "main": "karmen-client.js",
   "repository": "github.com/jrcichra/karmen",
