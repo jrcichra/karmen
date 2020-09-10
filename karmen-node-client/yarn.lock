@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@nodeguy/channel@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@nodeguy/channel/-/channel-0.6.6.tgz#21e6c6402533f047ef511b838d3ee94813a36bc6"
+  integrity sha512-5azDfNQk/XlZg9NpDw5LI8TQi2yvktPvxaE/4NXS4c941paVVES44Kzwqx3bhAU3hYMfLlhrW0RCGdEGGeZ7dQ==
+  dependencies:
+    setimmediate "1.0.5"
+
 carrier@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/carrier/-/carrier-0.3.0.tgz#bd295d1d3a7524cac63dd779b929ee22a362bad4"
@@ -70,6 +77,11 @@ rfdc@^1.1.4:
   version "1.1.4"
   resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.1.4.tgz#ba72cc1367a0ccd9cf81a870b3b58bd3ad07f8c2"
   integrity sha512-5C9HXdzK8EAqN7JDif30jqsBzavB7wLpaubisuQIGHWf2gUXSpzy6ArX/+Da8RjFpagWsCn+pIgxTMAmKw9Zug==
+
+setimmediate@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
+  integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
 
 streamroller@^2.2.4:
   version "2.2.4"

@@ -21,6 +21,7 @@ const os = require('os');
 const net = require('net');
 const carrier = require('carrier');
 const log4js = require('log4js');
+const Channel = require(`@nodeguy/channel`);
 const logger = log4js.getLogger();
 logger.level = "debug";
 
@@ -109,38 +110,56 @@ class Client {
         this.carrier = carrier.carry(this.socket);      //carrier will wrap the socket and won't fire an event until a line comes through
         this.hostname = os.hostname();
         this.actions = {};
-        this.promises = {};    // Promises to keep things in sync
+        this.channels = {
+            DISPATCHEDEVENT: Channel(),
+            // EMITEVENTRESPONSE: Channel(),
+            REGISTERCONTAINERRESPONSE: Channel(),
+            REGISTEREVENTRESPONSE: Channel(),
+            REGISTERACTIONRESPONSE: Channel()
+        };
+        // Channels to keep things in sync...because I think like a Go/Python coder
+    }
+
+    async connect() {
+        //Channel hack - this is awful, but I need to block until the socket is connected...
+        let c = Channel();
         //Connection logic
         this.socket.connect(this.port, this.host, () => {
             logger.info(`Connected to ${this.host} on port ${this.port}`);
+            c.push(true);
         });
         //Handle data logic
         this.carrier.on('line', (data) => {
-            logger.debug(`Received: '${data}'`);
-            let j = JSON.parse(data);
-            //Break out which function processes this data based on type
-            switch (j.type) {
-                case TRIGGERACTION:
-                    this.handleTriggerAction(j);
-                    break;
-                case DISPATCHEDEVENT:
-                    this.handleDispatchedEvent(j);
-                    break;
-                case EMITEVENTRESPONSE:
-                    this.handleEmitEventResponse(j);
-                    break;
-                case REGISTERCONTAINERRESPONSE:
-                    this.handleRegisterContainerResponse(j);
-                    break;
-                case REGISTEREVENTRESPONSE:
-                    this.handleRegisterEventResponse(j);
-                    break;
-                case REGISTERACTIONRESPONSE:
-                    this.handleRegisterActionResponse(h);
-                default:
-                    logger.error(`Got unexpected message from karmen: ${j}`);
-            }
+            // async so we can use await down the chain
+            (async () => {
+                logger.debug(`Received: '${data}'`);
+                let j = JSON.parse(data);
+                //Break out which function processes this data based on type
+                switch (j.type) {
+                    case TRIGGERACTION:
+                        await this.handleTriggerAction(j);
+                        break;
+                    case DISPATCHEDEVENT:
+                        await this.handleDispatchedEvent(j);
+                        break;
+                    case EMITEVENTRESPONSE:
+                        await this.handleEmitEventResponse(j);
+                        break;
+                    case REGISTERCONTAINERRESPONSE:
+                        await this.handleRegisterContainerResponse(j);
+                        break;
+                    case REGISTEREVENTRESPONSE:
+                        await this.handleRegisterEventResponse(j);
+                        break;
+                    case REGISTERACTIONRESPONSE:
+                        await this.handleRegisterActionResponse(h);
+                        break;
+                    default:
+                        logger.error(`Got unexpected message from karmen: ${j}`);
+                }
+            });
         });
+        await c.shift();
     }
 
     processParams(params) {
@@ -150,7 +169,7 @@ class Client {
         }
     }
 
-    sendActionResponse(message, r) {
+    async sendActionResponse(message, r) {
         logger.debug(`sendActionResponse got an r of ${r.getResult()}`);
         let m = new Message();
         if (r.getResult()) {
@@ -161,61 +180,58 @@ class Client {
         this.send(m.toJSONStr());
     }
 
-    handleEmitEventResponse(j) {
+    async handleEmitEventResponse(j) {
         logger.info(`Event ${j.name} finished with a return code of ${j.response_code}`);
-        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
-    handleRegisterEventResponse(j) {
+    async handleRegisterEventResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
         if (j.response_code != OK) {
             logger.error(`While registering the event, we got a bad return code: ${j.response_code}`);
         } else {
             logger.info(`Sucessfully registered event ${j.name}`);
         }
-        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
+        await this.channels.REGISTEREVENTRESPONSE.push(j);
     }
 
-    handleRegisterActionResponse(j) {
+    async handleRegisterActionResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
         if (j.response_code != OK) {
             logger.error(`While registering the action, we got a bad return code: ${j.response_code}`);
         } else {
             logger.info(`Sucessfully registered action ${j.name}`);
         }
-        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
+        await this.channels.REGISTERACTIONRESPONSE.push(j);
     }
 
-    handleTriggerAction(j) {
+    async handleTriggerAction(j) {
         let r = Result();
         logger.info(`Params before processing:${j.params}`);
         let params = this.processParams(j.params);
         logger.info(`Params after processing:${params}`);
-        //Spawn the event and send an action response after its completed
-        (async () => {
-            await this.actions[j.name](params, r);
-            await this.sendActionResponse(j, r);
-        })();
+        logger.info(`Starting action: ${j.name}`);
+        await this.actions[j.name](params, r);
+        await this.sendActionResponse(j, r);
     }
 
-    handleDispatchedEvent(j) {
+    async handleDispatchedEvent(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
         if (j.response_code != OK) {
             logger.error(`While emitting the event ${j.name}, we got a bad return code: ${j.response_code}`);
         } else {
             logger.info(`Sucessfully emitted event ${j.name}`);
         }
-        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
+        await this.channels.DISPATCHEDEVENT.push(j);
     }
 
-    handleRegisterContainerResponse(j) {
+    async handleRegisterContainerResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
         if (j.response_code != OK) {
             logger.error(`While registering the container, we got a bad return code: ${j.response_code}`);
         } else {
             logger.info("Sucessfully registered container");
         }
-        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
+        await this.channels.REGISTERCONTAINERRESPONSE.push(j);
     }
 
     send(string) {
@@ -226,25 +242,15 @@ class Client {
     async registerContainer() {
         let m = new Message();
         m.makeRegisterContainer(this.hostname);
-        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
-        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
-        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
-        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        //Hopefully when this returns it has registered the container...
+        await this.channels.REGISTERCONTAINERRESPONSE.shift();
     }
 
     async registerEvent(event_name) {
         let m = new Message();
         m.makeRegisterEvent(this.hostname, event_name);
-        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
-        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
-        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
-        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        //Hopefully when this returns it has registered the container...
+        await this.channels.REGISTEREVENTRESPONSE.shift();
     }
 
     async registerAction(action_name, action_function) {
@@ -252,25 +258,15 @@ class Client {
         m.makeRegisterAction(this.hostname, action_name);
         // Add action to map of actions
         this.actions[m.name] = action_function;
-        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
-        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
-        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
-        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        //Hopefully when this returns it has registered the container...
+        await this.channels.REGISTERACTIONRESPONSE.shift();
     }
 
     async emitEvent(event_name, params = {}) {
         let m = new Message();
         m.makeEmitEvent(this.hostname, event_name, params);
-        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
-        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
-        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
-        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
-        //Hopefully when this returns it has registered the container...
+        //emitEvent won't block...may need more here for JS to react, i.e a promise
     }
 }
 

@@ -2,6 +2,13 @@
 # yarn lockfile v1
 
 
+"@nodeguy/channel@^0.6.6":
+  version "0.6.6"
+  resolved "https://registry.yarnpkg.com/@nodeguy/channel/-/channel-0.6.6.tgz#21e6c6402533f047ef511b838d3ee94813a36bc6"
+  integrity sha512-5azDfNQk/XlZg9NpDw5LI8TQi2yvktPvxaE/4NXS4c941paVVES44Kzwqx3bhAU3hYMfLlhrW0RCGdEGGeZ7dQ==
+  dependencies:
+    setimmediate "1.0.5"
+
 carrier@^0.3.0:
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/carrier/-/carrier-0.3.0.tgz#bd295d1d3a7524cac63dd779b929ee22a362bad4"
@@ -50,11 +57,12 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-karmen-node-client@^1.0.15:
-  version "1.0.15"
-  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.15.tgz#381764ffb9955502a1cf7f421d2a8da203e0ba6a"
-  integrity sha512-pWkP5ZOfZ8HFZJBWjdi9XsjHJqQiyVo+ykjquKbHmRFoSecbMwomLyzR0Kyq2P75gUvNoQlLFgw24DKwKXZK0A==
+karmen-node-client@^1.0.20:
+  version "1.0.20"
+  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.20.tgz#2eb00191f2d6d0bbc8e932debf3bdb9603f75800"
+  integrity sha512-mS/ius6yRQSNXwQomBhf/qkMLUgYq5bg02mcch6JD3ZUyLQG1v9Kn6dM5l4kPUznkVdtNgnKO6nNiuRRe1TECQ==
   dependencies:
+    "@nodeguy/channel" "^0.6.6"
     carrier "^0.3.0"
     log4js "^6.3.0"
 
@@ -79,6 +87,21 @@ rfdc@^1.1.4:
   resolved "https://registry.yarnpkg.com/rfdc/-/rfdc-1.1.4.tgz#ba72cc1367a0ccd9cf81a870b3b58bd3ad07f8c2"
   integrity sha512-5C9HXdzK8EAqN7JDif30jqsBzavB7wLpaubisuQIGHWf2gUXSpzy6ArX/+Da8RjFpagWsCn+pIgxTMAmKw9Zug==
 
+setimmediate@1.0.5:
+  version "1.0.5"
+  resolved "https://registry.yarnpkg.com/setimmediate/-/setimmediate-1.0.5.tgz#290cbb232e306942d7d7ea9b83732ab7856f8285"
+  integrity sha1-KQy7Iy4waULX1+qbg3Mqt4VvgoU=
+
+siginfo@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/siginfo/-/siginfo-2.0.0.tgz#32e76c70b79724e3bb567cb9d543eb858ccfaf30"
+  integrity sha512-ybx0WO1/8bSBLEWXZvEd7gMW3Sn3JFlW3TvX1nREbDLRNQNaeNN8WK0meBwPdAaOI7TtRRRJn/Es1zhrrCHu7g==
+
+stackback@0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/stackback/-/stackback-0.0.2.tgz#1ac8a0d9483848d1695e418b6d031a3c3ce68e3b"
+  integrity sha1-Gsig2Ug4SNFpXkGLbQMaPDzmjjs=
+
 streamroller@^2.2.4:
   version "2.2.4"
   resolved "https://registry.yarnpkg.com/streamroller/-/streamroller-2.2.4.tgz#c198ced42db94086a6193608187ce80a5f2b0e53"
@@ -92,3 +115,11 @@ universalify@^0.1.0:
   version "0.1.2"
   resolved "https://registry.yarnpkg.com/universalify/-/universalify-0.1.2.tgz#b646f69be3942dabcecc9d6639c80dc105efaa66"
   integrity sha512-rBJeI5CXAlmy1pV+617WB9J63U6XcazHHF2f2dbJix4XzpUF0RS3Zbj0FGIOCAva5P/d/GBOYaACQ1w+0azUkg==
+
+why-is-node-running@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/why-is-node-running/-/why-is-node-running-2.2.0.tgz#fd0a73ea9303920fbb45457c6ecc392ebec90bd2"
+  integrity sha512-rxtN9D0lJaYyP92BR5yoyWecK2txBKmBIuS7GRbOPP5bXsT37/hBqcmTrlrt25DBr9p4WJb6c9LuYSJd89vHRQ==
+  dependencies:
+    siginfo "^2.0.0"
+    stackback "0.0.2"

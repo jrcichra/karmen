@@ -194,7 +194,6 @@ class Client:
             REGISTERCONTAINERRESPONSE: queue.Queue(),
             REGISTEREVENTRESPONSE: queue.Queue(),
             REGISTERACTIONRESPONSE: queue.Queue(),
-            # TRIGGERACTION: queue.Queue(),
             EMITEVENTRESPONSE: queue.Queue(),
             DISPATCHEDEVENT: queue.Queue(),
         }
