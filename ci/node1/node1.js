@@ -1,8 +1,11 @@
 const karmen = require("karmen-node-client");
 let k = new karmen.Client();
-k.registerContainer();
-k.registerEvent('hi');
-k.registerAction('print', function () {
-    console.log("I'm saying something from an action!");
-})
-k.emitEvent('hi', { "nodejs": "iscool" });
+(async () => {
+    await k.registerContainer();
+    await k.registerEvent('hi');
+    await console.log("about to register an action")
+    await k.registerAction('print', function () {
+        console.log("I'm saying something from an action!");
+    });
+    await k.emitEvent('hi', { "nodejs": "iscool" });
+})();

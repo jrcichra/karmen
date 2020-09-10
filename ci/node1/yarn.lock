@@ -50,10 +50,10 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-karmen-node-client@^1.0.10:
-  version "1.0.10"
-  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.10.tgz#c369326d36c571cf00800d37a4036f2a7c1e3063"
-  integrity sha512-dkMRJhDivbTtlBxo0M7l9KdwimVXct4Rbx9p5RpDnipTNsvCIKtYFsh3HioCPQMx5PmvjAXrIeQLV7L2ZvtfiA==
+karmen-node-client@^1.0.15:
+  version "1.0.15"
+  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.15.tgz#381764ffb9955502a1cf7f421d2a8da203e0ba6a"
+  integrity sha512-pWkP5ZOfZ8HFZJBWjdi9XsjHJqQiyVo+ykjquKbHmRFoSecbMwomLyzR0Kyq2P75gUvNoQlLFgw24DKwKXZK0A==
   dependencies:
     carrier "^0.3.0"
     log4js "^6.3.0"

@@ -109,6 +109,7 @@ class Client {
         this.carrier = carrier.carry(this.socket);      //carrier will wrap the socket and won't fire an event until a line comes through
         this.hostname = os.hostname();
         this.actions = {};
+        this.promises = {};    // Promises to keep things in sync
         //Connection logic
         this.socket.connect(this.port, this.host, () => {
             logger.info(`Connected to ${this.host} on port ${this.port}`);
@@ -118,7 +119,7 @@ class Client {
             logger.debug(`Received: '${data}'`);
             let j = JSON.parse(data);
             //Break out which function processes this data based on type
-            switch (j['type']) {
+            switch (j.type) {
                 case TRIGGERACTION:
                     this.handleTriggerAction(j);
                     break;
@@ -145,7 +146,7 @@ class Client {
     processParams(params) {
         let res = {};
         for (const [key, value] of Object.entries(params)) {
-            res[key] = params[key]['value'];
+            res[key] = params[key].value;
         }
     }
 
@@ -153,94 +154,124 @@ class Client {
         logger.debug(`sendActionResponse got an r of ${r.getResult()}`);
         let m = new Message();
         if (r.getResult()) {
-            m.makeActionResponse(this.hostname, message['name'], OK);
+            m.makeActionResponse(this.hostname, message.name, OK);
         } else {
-            m.makeActionResponse(this.hostname, message['name'], ERROR);
+            m.makeActionResponse(this.hostname, message.name, ERROR);
         }
         this.send(m.toJSONStr());
     }
 
     handleEmitEventResponse(j) {
-        logger.info(`Event ${j['name']} finished with a return code of ${j['response_code']}`);
+        logger.info(`Event ${j.name} finished with a return code of ${j.response_code}`);
+        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
     handleRegisterEventResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
-        if (j['response_code'] != OK) {
-            logger.error(`While registering the event, we got a bad return code: ${j['response_code']}`);
+        if (j.response_code != OK) {
+            logger.error(`While registering the event, we got a bad return code: ${j.response_code}`);
         } else {
-            logger.info(`Sucessfully registered event ${j['name']}`);
+            logger.info(`Sucessfully registered event ${j.name}`);
         }
+        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
     handleRegisterActionResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
-        if (j['response_code'] != OK) {
-            logger.error(`While registering the action, we got a bad return code: ${j['response_code']}`);
+        if (j.response_code != OK) {
+            logger.error(`While registering the action, we got a bad return code: ${j.response_code}`);
         } else {
-            logger.info(`Sucessfully registered action ${j['name']}`);
+            logger.info(`Sucessfully registered action ${j.name}`);
         }
+        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
     handleTriggerAction(j) {
         let r = Result();
-        logger.info(`Params before processing:${j['params']}`);
-        let params = this.processParams(j['params']);
+        logger.info(`Params before processing:${j.params}`);
+        let params = this.processParams(j.params);
         logger.info(`Params after processing:${params}`);
         //Spawn the event and send an action response after its completed
         (async () => {
-            await this.actions[j['name']](params, r);
+            await this.actions[j.name](params, r);
             await this.sendActionResponse(j, r);
         })();
     }
 
     handleDispatchedEvent(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
-        if (j['response_code'] != OK) {
-            logger.error(`While emitting the event ${j['name']}, we got a bad return code: ${j['response_code']}`);
+        if (j.response_code != OK) {
+            logger.error(`While emitting the event ${j.name}, we got a bad return code: ${j.response_code}`);
         } else {
-            logger.info(`Sucessfully emitted event ${j['name']}`);
+            logger.info(`Sucessfully emitted event ${j.name}`);
         }
+        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
     handleRegisterContainerResponse(j) {
         logger.debug(`response=${JSON.stringify(j)}`);
-        if (j['response_code'] != OK) {
-            logger.error(`While registering the container, we got a bad return code: ${j['response_code']}`);
+        if (j.response_code != OK) {
+            logger.error(`While registering the container, we got a bad return code: ${j.response_code}`);
         } else {
             logger.info("Sucessfully registered container");
         }
+        this.promises[`${j.container_name}-${j.name}-${j.type}`].resolve();
     }
 
     send(string) {
+        logger.debug(`Sending: '${string}'`);
         this.socket.write(string);
     }
 
-    registerContainer() {
+    async registerContainer() {
         let m = new Message();
         m.makeRegisterContainer(this.hostname);
+        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
+        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
+        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
+        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        //Hopefully when this returns it has registered the container...
     }
 
-    registerEvent(event_name) {
+    async registerEvent(event_name) {
         let m = new Message();
         m.makeRegisterEvent(this.hostname, event_name);
+        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
+        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
+        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
+        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        //Hopefully when this returns it has registered the container...
     }
 
-    registerAction(action_name, action_function) {
+    async registerAction(action_name, action_function) {
         let m = new Message();
         m.makeRegisterAction(this.hostname, action_name);
+        // Add action to map of actions
+        this.actions[m.name] = action_function;
+        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
+        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
+        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
+        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        //Hopefully when this returns it has registered the container...
     }
 
-    emitEvent(event_name, params = {}) {
+    async emitEvent(event_name, params = {}) {
         let m = new Message();
         m.makeEmitEvent(this.hostname, event_name, params);
+        // Because I'm a javascript n00b, and used to threaded programming languages, I'm trying to keep a mapping of promises
+        // In hopes that I can resolve the empty promise elsewhere and that will unlock the await here (it's messy)
+        this.promises[`${m.container_name}-${m.name}-${m.type}`] = new Promise(() => { });
         this.send(m.toJSONStr());
+        await this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        delete this.promises[`${m.container_name}-${m.name}-${m.type}`];
+        //Hopefully when this returns it has registered the container...
     }
-
-
 }
 
 module.exports = {
