@@ -1,12 +1,13 @@
 {
   "name": "karmen-node-client",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "Node client for the Karmen framework",
   "main": "karmen-client.js",
   "repository": "github.com/jrcichra/karmen",
   "author": "Justin Cichra",
   "license": "MIT",
   "dependencies": {
+    "carrier": "^0.3.0",
     "log4js": "^6.3.0"
   }
 }
