@@ -152,21 +152,28 @@ class Client {
                         await this.handleRegisterEventResponse(j);
                         break;
                     case REGISTERACTIONRESPONSE:
-                        await this.handleRegisterActionResponse(h);
+                        await this.handleRegisterActionResponse(j);
                         break;
                     default:
                         logger.error(`Got unexpected message from karmen: ${j}`);
                 }
-            });
+            })();
         });
         await c.shift();
     }
 
     processParams(params) {
         let res = {};
-        for (const [key, value] of Object.entries(params)) {
-            res[key] = params[key].value;
+        for (let key in params) {
+            if (params[key].type == "string") {
+                res[key] = String(params[key].value);
+            } else if (params[key].type == "number") {
+                res[key] = Number(params[key].value);
+            } else if (params[key].type == "bool") {
+                res[key] = Boolean(params[key].value);
+            }
         }
+        return res;
     }
 
     async sendActionResponse(message, r) {
@@ -205,10 +212,10 @@ class Client {
     }
 
     async handleTriggerAction(j) {
-        let r = Result();
-        logger.info(`Params before processing:${j.params}`);
+        let r = new Result();
+        logger.info(`Params before processing:${JSON.stringify(j.params)}`);
         let params = this.processParams(j.params);
-        logger.info(`Params after processing:${params}`);
+        logger.info(`Params after processing:${JSON.stringify(params)}`);
         logger.info(`Starting action: ${j.name}`);
         await this.actions[j.name](params, r);
         await this.sendActionResponse(j, r);

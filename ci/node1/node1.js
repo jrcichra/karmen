@@ -1,4 +1,4 @@
-const log = require('why-is-node-running')
+#!/usr/bin/env node
 const karmen = require("karmen-node-client");
 let k = new karmen.Client();
 (async () => {
@@ -7,12 +7,10 @@ let k = new karmen.Client();
     await k.registerContainer();
     await k.registerEvent('hi');
     console.log("about to register an action")
-    await k.registerAction('print', function () {
+    await k.registerAction('print', function (params, result) {
         console.log("I'm saying something from an action!");
+        console.log(`I got these params: ${JSON.stringify(params)}`);
+        result.Pass();
     });
     await k.emitEvent('hi', { "nodejs": "iscool" });
 })();
-
-setTimeout(function () {
-    log() // logs out active handles that are keeping node running
-}, 100)
