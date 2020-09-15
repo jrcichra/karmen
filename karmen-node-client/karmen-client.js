@@ -103,12 +103,12 @@ class Result {
 }
 
 class Client {
-    constructor(host = "karmen", port = 8080) {
+    constructor(host = "karmen", port = 8080, hostname = os.hostname()) {
         this.host = host;
         this.port = port;
         this.socket = new net.Socket();
         this.carrier = carrier.carry(this.socket);      //carrier will wrap the socket and won't fire an event until a line comes through
-        this.hostname = os.hostname();
+        this.hostname = hostname;
         this.actions = {};
         this.channels = {
             DISPATCHEDEVENT: Channel(),

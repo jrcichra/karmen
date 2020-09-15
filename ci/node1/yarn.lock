@@ -57,10 +57,10 @@ jsonfile@^4.0.0:
   optionalDependencies:
     graceful-fs "^4.1.6"
 
-karmen-node-client@^1.0.27:
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.27.tgz#8b8d4ecb8a65459393e9b08dbe80b987032e1a86"
-  integrity sha512-rdYSRXrs66NxzglP59mQSWtPcSbvJtvDC3sQ/YwXOLRBYS/0KwtL4EMSrKRgrF/FVN13qOsmtWGkjsMpHpSoSw==
+karmen-node-client@^1.0.28:
+  version "1.0.28"
+  resolved "https://registry.yarnpkg.com/karmen-node-client/-/karmen-node-client-1.0.28.tgz#b7f47ba8ed49d813243cb608fc8d63aa45b4a8f9"
+  integrity sha512-jusMF4eRx9CzMnXJzchXUCzbvraWvN5dxGSSzQgfu1ep2iRMPrbGwOo29zzsvKJvs9weoGHBLBKBMKSrMW4/2w==
   dependencies:
     "@nodeguy/channel" "^0.6.6"
     carrier "^0.3.0"
