@@ -54,8 +54,8 @@ jobs:
           password: ${{ secrets.DOCKER_PASSWORD }}
       - uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./karmen
+          file: ./karmen/Dockerfile
           platforms: linux/amd64,linux/arm/v7,linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.prep.outputs.tags }}
