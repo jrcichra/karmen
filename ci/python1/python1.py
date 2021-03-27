@@ -1,5 +1,6 @@
 import karmen
 import time
+import sys
 
 
 def action1(params, result):
@@ -20,7 +21,9 @@ k.registerAction("action1", action1)
 k.registerAction("action2", action2)
 
 time.sleep(5)
-k.emitEvent("event1",params={"a":"parameter", "b": 5.4})
+k.emitEvent("event1", params={"a": "parameter", "b": 5.4})
 time.sleep(5)
 k.emitEvent("event2")
 time.sleep(5)
+
+sys.exit(0)
