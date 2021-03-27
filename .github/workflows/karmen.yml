@@ -80,10 +80,10 @@ jobs:
           set -x
           # build a container based on the arg passed in
           cd karmen
-          docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/karmen:ci .
+          docker build -t jrcichra/karmen:ci .
           cd ..
           # Build the CI containers
           cd ci
-          docker-compose --build-arg GITHUB_SHA=${GITHUB_SHA} build
+          docker-compose build --build-arg GITHUB_SHA=${GITHUB_SHA}
           # Run the CI test docker-compose
           timeout 120 docker-compose up --exit-code-from python
