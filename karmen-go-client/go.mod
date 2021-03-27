@@ -1,3 +1,3 @@
 module github.com/jrcichra/karmen/karmen-go-client
 
-go 1.13
+go 1.16
