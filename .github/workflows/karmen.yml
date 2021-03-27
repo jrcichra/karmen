@@ -84,6 +84,6 @@ jobs:
           cd ..
           # Build the CI containers
           cd ci
-          docker-compose build
+          docker-compose --build-arg GITHUB_SHA=${GITHUB_SHA} build
           # Run the CI test docker-compose
           timeout 120 docker-compose up --exit-code-from python
