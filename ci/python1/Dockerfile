@@ -1,4 +1,4 @@
-FROM python:3.8.0-alpine
+FROM python:3.9-alpine3.13
 WORKDIR /app
 ARG GITHUB_SHA
 ADD python1.py requirements.txt https://raw.githubusercontent.com/jrcichra/karmen/${GITHUB_SHA}/karmen-python-client/karmen/karmen.py /app/
