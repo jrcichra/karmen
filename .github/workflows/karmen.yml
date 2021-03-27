@@ -98,4 +98,9 @@ jobs:
           cd ci
           docker-compose build --build-arg GITHUB_SHA=${GITHUB_SHA}
           # Run the CI test docker-compose
-          timeout 120 docker-compose up --exit-code-from python
+          timeout 120 docker-compose up || /bin/true
+          # What did each container exit with
+          for i in $(docker ps -a  | awk '{print $1}' | grep -v CONTAINER)
+          do
+            docker inspect $i --format='{{.State.ExitCode}}'
+          done
