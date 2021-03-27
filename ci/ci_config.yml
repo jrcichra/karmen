@@ -1,17 +1,17 @@
 events:
-      python1.event1:
-            - serial:
-                    - python.action1
-                    - python.action2
-      python1.event2:
-            - parallel:
-                    - python.action1
-                    - python.action2
-      go.e1:
-            - serial:
-                    - go.a1:
-                            - akey: inyaml
-      node.hi:
-            - serial:
-                    - node.print:
-                            - config: thisisfromtheconfigfile
+  python.event1:
+    - serial:
+        - python.action1
+        - python.action2
+  python.event2:
+    - parallel:
+        - python.action1
+        - python.action2
+  go.e1:
+    - serial:
+        - go.a1:
+            - akey: inyaml
+  node.hi:
+    - serial:
+        - node.print:
+            - config: thisisfromtheconfigfile
