@@ -77,9 +77,10 @@ jobs:
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
       - name: CI
         run: |
+          set -x
           # build a container based on the arg passed in
           cd karmen
-          docker build -t jrcichra/karmen:ci .
+          docker build --build-arg GITHUB_SHA=${GITHUB_SHA} -t jrcichra/karmen:ci .
           cd ..
           # Build the CI containers
           cd ci
