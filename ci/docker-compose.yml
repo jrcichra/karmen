@@ -11,6 +11,7 @@ services:
     environment:
       TZ: "America/New_York"
     hostname: python
+    build: ./python1
     image: jrcichra/python1:ci
     depends_on:
       - karmen
@@ -18,6 +19,7 @@ services:
     environment:
       TZ: "America/New_York"
     hostname: go
+    build: ./go1
     image: jrcichra/go1:ci
     depends_on:
       - karmen
@@ -27,6 +29,7 @@ services:
     environment:
       TZ: "America/New_York"
     hostname: node
+    build: ./node1
     image: jrcichra/node1:ci
     depends_on:
       - karmen

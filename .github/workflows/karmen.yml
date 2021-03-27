@@ -55,7 +55,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-buildx-
       - name: Login to DockerHub
-        uses: docker/login-action@v1 
+        uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
@@ -75,3 +75,14 @@ jobs:
             org.opencontainers.image.created=${{ steps.prep.outputs.created }}
             org.opencontainers.image.revision=${{ github.sha }}
             org.opencontainers.image.licenses=${{ fromJson(steps.repo.outputs.result).license.spdx_id }}
+      - name: CI
+        run: |
+          # build a container based on the arg passed in
+          cd karmen
+          docker build -t jrcichra/karmen:ci .
+          cd ..
+          # Build the CI containers
+          cd ci
+          docker-compose build
+          # Run the CI test docker-compose
+          timeout 120 docker-compose up --exit-code-from python
