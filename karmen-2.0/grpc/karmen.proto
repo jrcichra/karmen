@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+option go_package = "github.com/jrcichra/karmen";
+
+service Karmen {
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc EmitEvent (EventRequest) returns (EventResponse);
+    rpc ActionDispatcher (stream ActionResponse) returns (stream ActionRequest);
+}
+
+message RegisterRequest {
+    string name = 1;
+    int64 timestamp = 2;
+    repeated string events = 3;
+    repeated string actions = 4;
+}
+
+message RegisterResponse {
+    RegisterRequest request = 1;
+    Result result = 2; 
+}
+
+message Result {
+    int64 code = 1;
+    map<string,string> parameters = 2;
+}
+
+message Event {
+    string eventName = 1;
+    int64 timestamp = 2;
+    map<string, string> parameters = 3;
+}
+
+message Action {
+    string actionName = 1;
+    int64 timestamp = 2;
+    map<string,string> parameters = 3;
+}
+
+message ActionRequest {
+    Action action = 1;
+    string uuid = 2;
+    string requesterName = 3;
+}
+
+message ActionResponse {
+    ActionRequest request = 1;
+    Result result = 2;
+}
+
+message EventRequest {
+    Event event = 1;
+    string uuid = 2;
+    string requesterName = 3;
+}
+
+message EventResponse {
+    EventRequest request = 1;
+    Result result = 2;
+}
