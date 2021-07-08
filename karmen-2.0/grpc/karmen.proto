@@ -6,6 +6,15 @@ service Karmen {
     rpc Register (RegisterRequest) returns (RegisterResponse);
     rpc EmitEvent (EventRequest) returns (EventResponse);
     rpc ActionDispatcher (stream ActionResponse) returns (stream ActionRequest);
+    rpc PingPong (Ping) returns (Pong);
+}
+
+message Ping {
+    string message = 1;
+}
+
+message Pong {
+    string message = 1;
 }
 
 message RegisterRequest {

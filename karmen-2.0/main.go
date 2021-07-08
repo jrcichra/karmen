@@ -6,30 +6,32 @@ import (
 
 	pb "github.com/jrcichra/karmen/grpc"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 const port = ":8080"
 
-func serveGRPC() {
+func serveGRPC(c *Config) {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterKarmenServer(s, &karmen{})
+	pb.RegisterKarmenServer(s, &karmen{Config: c})
+	reflection.Register(s)
 	log.Println("Serving gRPC on port " + port + "...")
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
 }
 
-func main() {
-	// go serveGRPC()
+func loadConfig(filename string) *Config {
 	config := &Config{}
-	config.LoadConfig("example.yml")
+	config.LoadConfig(filename)
 	config.dumpConfig()
-	// Just to hold us until we have something that holds main - keep things in parallel that can be
-	// for {
-	// 	time.Sleep(1 * time.Second)
-	// }
+	return config
+}
+
+func main() {
+	serveGRPC(loadConfig("example.yml"))
 }

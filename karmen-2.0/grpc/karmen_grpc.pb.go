@@ -21,6 +21,7 @@ type KarmenClient interface {
 	Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error)
 	EmitEvent(ctx context.Context, in *EventRequest, opts ...grpc.CallOption) (*EventResponse, error)
 	ActionDispatcher(ctx context.Context, opts ...grpc.CallOption) (Karmen_ActionDispatcherClient, error)
+	PingPong(ctx context.Context, in *Ping, opts ...grpc.CallOption) (*Pong, error)
 }
 
 type karmenClient struct {
@@ -80,6 +81,15 @@ func (x *karmenActionDispatcherClient) Recv() (*ActionRequest, error) {
 	return m, nil
 }
 
+func (c *karmenClient) PingPong(ctx context.Context, in *Ping, opts ...grpc.CallOption) (*Pong, error) {
+	out := new(Pong)
+	err := c.cc.Invoke(ctx, "/Karmen/PingPong", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // KarmenServer is the server API for Karmen service.
 // All implementations must embed UnimplementedKarmenServer
 // for forward compatibility
@@ -87,6 +97,7 @@ type KarmenServer interface {
 	Register(context.Context, *RegisterRequest) (*RegisterResponse, error)
 	EmitEvent(context.Context, *EventRequest) (*EventResponse, error)
 	ActionDispatcher(Karmen_ActionDispatcherServer) error
+	PingPong(context.Context, *Ping) (*Pong, error)
 	mustEmbedUnimplementedKarmenServer()
 }
 
@@ -102,6 +113,9 @@ func (UnimplementedKarmenServer) EmitEvent(context.Context, *EventRequest) (*Eve
 }
 func (UnimplementedKarmenServer) ActionDispatcher(Karmen_ActionDispatcherServer) error {
 	return status.Errorf(codes.Unimplemented, "method ActionDispatcher not implemented")
+}
+func (UnimplementedKarmenServer) PingPong(context.Context, *Ping) (*Pong, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method PingPong not implemented")
 }
 func (UnimplementedKarmenServer) mustEmbedUnimplementedKarmenServer() {}
 
@@ -178,6 +192,24 @@ func (x *karmenActionDispatcherServer) Recv() (*ActionResponse, error) {
 	return m, nil
 }
 
+func _Karmen_PingPong_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(Ping)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(KarmenServer).PingPong(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/Karmen/PingPong",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(KarmenServer).PingPong(ctx, req.(*Ping))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 // Karmen_ServiceDesc is the grpc.ServiceDesc for Karmen service.
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
@@ -192,6 +224,10 @@ var Karmen_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "EmitEvent",
 			Handler:    _Karmen_EmitEvent_Handler,
+		},
+		{
+			MethodName: "PingPong",
+			Handler:    _Karmen_PingPong_Handler,
 		},
 	},
 	Streams: []grpc.StreamDesc{

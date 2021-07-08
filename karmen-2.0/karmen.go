@@ -9,6 +9,7 @@ import (
 
 type karmen struct {
 	pb.UnimplementedKarmenServer
+	Config *Config
 }
 
 //Register - register a container
@@ -28,4 +29,9 @@ func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 	log.Println("Holding onto an ActionDispatcher")
 	// you would dispatch actions and expect responses to those actions in here
 	return nil
+}
+
+func (k *karmen) PingPong(ctx context.Context, in *pb.Ping) (*pb.Pong, error) {
+	log.Println("Got a ping! Message:", in.Message)
+	return &pb.Pong{Message: "Hello there, " + in.Message}, nil
 }
