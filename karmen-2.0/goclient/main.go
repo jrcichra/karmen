@@ -5,6 +5,7 @@ import (
 	"log"
 	"time"
 
+	"github.com/davecgh/go-spew/spew"
 	pb "github.com/jrcichra/karmen/goclient/grpc"
 	"google.golang.org/grpc"
 )
@@ -40,6 +41,8 @@ func handleActions(client pb.KarmenClient) {
 			panic(err)
 		}
 		log.Println(msg.RequesterName, "requested I run", msg.Action.ActionName+". It's going to take me a few seconds...")
+		log.Println("Parameters:")
+		spew.Dump(msg.Action.Parameters)
 		time.Sleep(5 * time.Second)
 		log.Println("Finished running", msg.Action.ActionName, "for", msg.RequesterName)
 		result := &pb.Result{Code: 200, Parameters: map[string]string{"asdf": "1234"}}

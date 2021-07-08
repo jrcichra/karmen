@@ -152,10 +152,9 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 	conditions := make(map[ConditionName]ConditionValue)
 
 	if len(action.Content) == 2 {
-		i := 0
-		for i < len(action.Content[1].Content[0].Content) {
-			c.parseParameter(ParameterName(action.Content[1].Content[0].Content[i].Value), action.Content[1].Content[0].Content[i+1], parameters, conditions)
-			i += 2
+		for i := 0; i < len(action.Content[1].Content); i++ {
+			c.parseParameter(ParameterName(action.Content[1].Content[i].Content[0].Value),
+				action.Content[1].Content[i].Content[1], parameters, conditions)
 		}
 	}
 

@@ -3,3 +3,7 @@ events:
     - serial:
         - bob.action:
             - akey: fromyaml
+        - bob.action:
+            - one: uno
+            - two: dos
+            - three: trio

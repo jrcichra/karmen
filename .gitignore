@@ -7,3 +7,4 @@ ci/node1/node_modules/
 ci/node1/yarn-error.log
 karmen-node-client/yarn-error.log
 karmen-2.0/asdf
+karmen-2.0/goclient/asdf
