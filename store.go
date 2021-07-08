@@ -29,6 +29,8 @@ type Host struct {
 	Events     map[string]string
 	Actions    map[string]string
 	Dispatcher pb.Karmen_ActionDispatcherServer
+	Dispatched chan struct{}
+	Deallocate chan struct{}
 }
 
 type BlockType string

@@ -35,19 +35,21 @@ func handleActions(client pb.KarmenClient) {
 	if err != nil {
 		panic(err)
 	}
-	for {
-		msg, err := dispatcher.Recv()
-		if err != nil {
-			panic(err)
+	go func() {
+		for {
+			msg, err := dispatcher.Recv()
+			if err != nil {
+				panic(err)
+			}
+			log.Println(msg.RequesterName, "requested I run", msg.Action.ActionName+". It's going to take me a few seconds...")
+			log.Println("Parameters:")
+			spew.Dump(msg.Action.Parameters)
+			time.Sleep(5 * time.Second)
+			log.Println("Finished running", msg.Action.ActionName, "for", msg.RequesterName)
+			result := &pb.Result{Code: 200, Parameters: map[string]string{"asdf": "1234"}}
+			dispatcher.Send(&pb.ActionResponse{Result: result})
 		}
-		log.Println(msg.RequesterName, "requested I run", msg.Action.ActionName+". It's going to take me a few seconds...")
-		log.Println("Parameters:")
-		spew.Dump(msg.Action.Parameters)
-		time.Sleep(5 * time.Second)
-		log.Println("Finished running", msg.Action.ActionName, "for", msg.RequesterName)
-		result := &pb.Result{Code: 200, Parameters: map[string]string{"asdf": "1234"}}
-		dispatcher.Send(&pb.ActionResponse{Result: result})
-	}
+	}()
 }
 
 func sendEvent(client pb.KarmenClient) {
@@ -69,7 +71,7 @@ func main() {
 	defer conn.Close()
 	client := pb.NewKarmenClient(conn)
 	register(client)
-	go handleActions(client)
+	handleActions(client)
 	sendEvent(client)
 	select {}
 }

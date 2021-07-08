@@ -18,7 +18,15 @@ type karmen struct {
 //Register - register a container
 func (k *karmen) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	log.Printf("Received Register for: %v", in.GetName())
+	//if someone is there, deallocate it before recreating
+	if _, ok := k.State.Hosts[HostName(in.GetName())]; ok {
+		select {
+		case k.State.Hosts[HostName(in.GetName())].Deallocate <- struct{}{}:
+		default:
+		}
+	}
 	k.State.Hosts[HostName(in.GetName())] = &Host{Online: true, Events: in.Events, Actions: in.Actions}
+	k.State.Hosts[HostName(in.GetName())].Deallocate = make(chan struct{})
 	debugPrintln("Dumping the state:")
 	debugSpew(k.State.Hosts)
 	return &pb.RegisterResponse{Request: in, Result: &pb.Result{Code: 200}}, nil
@@ -26,6 +34,14 @@ func (k *karmen) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.Regi
 
 func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventResponse, error) {
 	log.Printf("Received EmitEvent for : %v", in.Event.GetEventName())
+
+	// If we're handling an event, ability to recover and cancel the job
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("[EmitEvent] - Something went terribly wrong in", r)
+			log.Println("[EmitEvent] - Most likely we lost connection to", in.RequesterName, "mid event:", in.Event.GetEventName())
+		}
+	}()
 
 	// Get the event as parsed from the yaml
 	event := k.Config.Events[in.RequesterName+"."+in.Event.GetEventName()]
@@ -68,9 +84,10 @@ func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 	log.Println("ActionDispatcher is open for", who.Hostname)
 	k.State.Hosts[HostName(hostname)].Dispatcher = s
 
-	// Keep the dispatcher alive so we can send actions later
-	select {}
-
+	// Keep the dispatcher alive so we can send actions later...until we are de-allocated
+	// This happens when a container flaps and we need to re-set things up
+	<-k.State.Hosts[HostName(hostname)].Deallocate
+	log.Println("Deallocating existing ActionDispatcher for", hostname)
 	return nil
 }
 
