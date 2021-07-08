@@ -10,6 +10,7 @@ import (
 )
 
 const port = ":8080"
+const debug = false
 
 func serveGRPC(c *Config) {
 	lis, err := net.Listen("tcp", port)
@@ -17,7 +18,7 @@ func serveGRPC(c *Config) {
 		log.Fatalf("failed to listen: %v", err)
 	}
 	s := grpc.NewServer()
-	pb.RegisterKarmenServer(s, &karmen{Config: c})
+	pb.RegisterKarmenServer(s, &karmen{Config: c, State: State{Hosts: make(map[HostName]*Host)}})
 	reflection.Register(s)
 	log.Println("Serving gRPC on port " + port + "...")
 	if err := s.Serve(lis); err != nil {
@@ -28,7 +29,9 @@ func serveGRPC(c *Config) {
 func loadConfig(filename string) *Config {
 	config := &Config{}
 	config.LoadConfig(filename)
-	config.dumpConfig()
+	if debug {
+		config.dumpConfig()
+	}
 	return config
 }
 

@@ -89,8 +89,8 @@ func (c *Config) parseEvent(fullname string, event *yaml.Node) {
 	if len(split) != 2 {
 		log.Fatal("Invalid YAML. Events should be named hostname.eventname. Found '" + fullname + "'.")
 	}
-	hostname := split[0]
-	eventname := split[1]
+	hostname := HostName(split[0])
+	eventname := EventName(split[1])
 
 	// log.Println("hostname  =", hostname)
 	// log.Println("eventname =", eventname)
@@ -101,7 +101,7 @@ func (c *Config) parseEvent(fullname string, event *yaml.Node) {
 	for i := 0; i < len(typeMaps); i++ {
 		block := &Block{}
 		blocks = append(blocks, block)
-		c.parseType(typeMaps[i].Content[0].Value, typeMaps[i].Content[1], block)
+		c.parseType(BlockType(typeMaps[i].Content[0].Value), typeMaps[i].Content[1], block)
 
 	}
 
@@ -110,7 +110,7 @@ func (c *Config) parseEvent(fullname string, event *yaml.Node) {
 
 }
 
-func (c *Config) parseType(typ string, m *yaml.Node, block *Block) {
+func (c *Config) parseType(typ BlockType, m *yaml.Node, block *Block) {
 	// log.Println("parseType() -", typ)
 	// log.Println("type is", typ)
 
@@ -139,8 +139,8 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 	if len(split) != 2 {
 		log.Fatal("Invalid YAML. Actions should be named hostname.actionname. Found '" + fullname + "'.")
 	}
-	hostname := split[0]
-	actioname := split[1]
+	hostname := HostName(split[0])
+	actioname := ActionName(split[1])
 
 	a.HostName = hostname
 	a.ActionName = actioname
@@ -148,13 +148,13 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 	// log.Println("hostname  =", hostname)
 	// log.Println("actioname =", actioname)
 
-	parameters := make(map[string]string)
-	conditions := make(map[string]string)
+	parameters := make(map[ParameterName]ParameterValue)
+	conditions := make(map[ConditionName]ConditionValue)
 
 	if len(action.Content) == 2 {
 		i := 0
 		for i < len(action.Content[1].Content[0].Content) {
-			c.parseParameter(action.Content[1].Content[0].Content[i].Value, action.Content[1].Content[0].Content[i+1], parameters, conditions)
+			c.parseParameter(ParameterName(action.Content[1].Content[0].Content[i].Value), action.Content[1].Content[0].Content[i+1], parameters, conditions)
 			i += 2
 		}
 	}
@@ -164,22 +164,22 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 
 }
 
-func (c *Config) parseParameter(name string, parameters *yaml.Node, pMap map[string]string, cMap map[string]string) {
+func (c *Config) parseParameter(name ParameterName, parameters *yaml.Node, pMap map[ParameterName]ParameterValue, cMap map[ConditionName]ConditionValue) {
 	value := parameters.Value
 	// log.Println("parseParameter() -", name+":", value)
 
 	if name == "if" {
-		c.parseCondition(name, value, cMap)
+		c.parseCondition(ConditionName(name), ConditionValue(value), cMap)
 	} else {
-		pMap[name] = value
+		pMap[name] = ParameterValue(value)
 	}
 
 }
 
-func (c *Config) parseCondition(name string, value string, cMap map[string]string) {
+func (c *Config) parseCondition(name ConditionName, value ConditionValue, cMap map[ConditionName]ConditionValue) {
 	// is the condition valid syntactically?
 	//split it by whitespace
-	tokens := strings.Fields(value)
+	tokens := strings.Fields(string(value))
 	if len(tokens) <= 0 {
 		log.Fatal("Invalid YAML. Condition:", value, " was empty")
 	}

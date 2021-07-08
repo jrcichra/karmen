@@ -4,7 +4,7 @@ events:
         - python.action1
         - python.action2
         - python.action3:
-            - if: python.action1.pass && val > 5
+            - if: python.action1.pass
   python.event2:
     - parallel:
         - python.action1

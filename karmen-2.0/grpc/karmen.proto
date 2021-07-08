@@ -20,8 +20,8 @@ message Pong {
 message RegisterRequest {
     string name = 1;
     int64 timestamp = 2;
-    repeated string events = 3;
-    repeated string actions = 4;
+    map<string,string> events = 3;
+    map<string,string> actions = 4;
 }
 
 message RegisterResponse {
@@ -55,6 +55,9 @@ message ActionRequest {
 message ActionResponse {
     ActionRequest request = 1;
     Result result = 2;
+    // Unfortunately, for context, we need an ActionResponse from the client off the bat with just 'hostname'
+    // so we know who's who when sending actions
+    string hostname = 3;
 }
 
 message EventRequest {
