@@ -62,16 +62,15 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	}
 
 	// generate a UUID for this event
-	uuid, err := uuid.NewUUID()
-	if err != nil {
-		log.Println(err)
-	}
+	uuid := uuid.New()
 	k.State.Events = make(map[UUID]Results)
 
 	// Run through the blocks
 	for _, block := range event.Blocks {
 		k.runBlock(block, in.RequesterName, uuid)
 	}
+
+	k.eventPrint(uuid, "Event", in.GetEvent().EventName, "completed")
 
 	// When the event is done, delete the result history
 	delete(k.State.Events, UUID(uuid.String()))

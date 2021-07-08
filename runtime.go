@@ -91,7 +91,7 @@ func (k *karmen) runBlock(block *Block, requesterName string, uuid uuid.UUID) bo
 	} else if block.Type == "parallel" {
 		b = k.runParallelBlock(block, requesterName, uuid)
 	} else {
-		log.Println("Unknown Block type: " + string(block.Type))
+		k.eventPrint(uuid, "Unknown Block type: "+string(block.Type))
 		b = false
 	}
 	return b
@@ -104,7 +104,7 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 		//Check the conditons
 		run, fail := k.evaluateConditions(action.Conditions, uuid)
 		if fail {
-			log.Println("Failing block because of configuration error")
+			k.eventPrint(uuid, "Failing block because of configuration error")
 			break
 		}
 		if run {
@@ -113,18 +113,18 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 			// Form that into a request
 			request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
 			// Send the request
-			log.Println("Dispatching action:", action.ActionName, "on", action.HostName)
+			k.eventPrint(uuid, "Dispatching action:", action.ActionName, "on", action.HostName)
 			err := k.State.Hosts[action.HostName].Dispatcher.Send(request)
 			if err != nil {
-				log.Println(err)
+				k.eventPrint(uuid, err)
 			}
 			// Wait for a response (because it's serial)
 			response, err := k.State.Hosts[action.HostName].Dispatcher.Recv()
 			if err != nil {
-				log.Println(err)
+				k.eventPrint(uuid, err)
 			}
-			log.Println("Action response:")
-			log.Println(response)
+			k.eventPrint(uuid, "Action response:")
+			k.eventPrint(uuid, response)
 			// Parse the return code - may be expanded later
 
 			var passString string
@@ -143,7 +143,7 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 			// Store the overall result
 			k.State.Events[UUID(uuid.String())][Variable(action.HostName)+".pass"] = VariableValue(passString)
 		} else {
-			log.Println("Skipping", block.Type, " because condition failed")
+			k.eventPrint(uuid, "Skipping", block.Type, " because condition failed")
 		}
 	}
 	return overallResult
@@ -151,4 +151,11 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 
 func (k *karmen) runParallelBlock(block *Block, requesterName string, uuid uuid.UUID) bool {
 	return true
+}
+
+func (k *karmen) eventPrint(uuid uuid.UUID, s ...interface{}) {
+	var a []interface{}
+	a = append(a, uuid.String())
+	s = append(a, s...)
+	log.Println(s...)
 }

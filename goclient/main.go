@@ -46,7 +46,7 @@ func handleActions(client pb.KarmenClient) {
 			spew.Dump(msg.Action.Parameters)
 			time.Sleep(5 * time.Second)
 			log.Println("Finished running", msg.Action.ActionName, "for", msg.RequesterName)
-			result := &pb.Result{Code: 200, Parameters: map[string]string{"asdf": "1234"}}
+			result := &pb.Result{Code: 500, Parameters: map[string]string{"asdf": "1234"}}
 			dispatcher.Send(&pb.ActionResponse{Result: result})
 		}
 	}()
