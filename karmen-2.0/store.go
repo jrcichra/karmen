@@ -43,10 +43,8 @@ type Variable string
 type VariableValue string
 type UUID string
 
-type EventState struct {
-	Results map[Variable]VariableValue
-}
+type Results map[Variable]VariableValue
 type State struct {
 	Hosts  map[HostName]*Host
-	Events map[UUID]EventState
+	Events map[UUID]Results
 }

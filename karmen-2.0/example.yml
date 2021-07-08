@@ -1,23 +1,5 @@
 events:
-  python.event1:
+  bob.event:
     - serial:
-        - python.action1
-        - python.action2
-        - python.action3:
-            - if: python.action1.pass
-  python.event2:
-    - parallel:
-        - python.action1
-        - python.action2
-    - serial:
-        - python.action3
-    - parallel:
-        - python.action4
-  go.e1:
-    - serial:
-        - go.a1:
-            - akey: inyaml
-  node.hi:
-    - serial:
-        - node.print:
-            - config: thisisfromtheconfigfile
+        - bob.action:
+            - akey: fromyaml

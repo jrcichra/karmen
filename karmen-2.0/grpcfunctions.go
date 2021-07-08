@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"log"
 
 	"github.com/google/uuid"
@@ -27,14 +28,20 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	log.Printf("Received EmitEvent for : %v", in.Event.GetEventName())
 
 	// Get the event as parsed from the yaml
-	event := k.Config.Events[in.Event.GetEventName()]
+	event := k.Config.Events[in.RequesterName+"."+in.Event.GetEventName()]
+
+	if event == nil {
+		err := errors.New("Event '" + in.GetEvent().EventName + "' was not found in the YAML. Cannot launch it")
+		log.Println(err)
+		return &pb.EventResponse{Request: in, Result: &pb.Result{Code: 500}}, err
+	}
 
 	// generate a UUID for this event
 	uuid, err := uuid.NewUUID()
 	if err != nil {
 		log.Println(err)
 	}
-	k.State.Events = make(map[UUID]EventState)
+	k.State.Events = make(map[UUID]Results)
 
 	// Run through the blocks
 	for _, block := range event.Blocks {
@@ -48,7 +55,7 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 }
 
 func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
-	log.Println("Holding onto an ActionDispatcher. Waiting for a stub ActionResponse telling us who this is...")
+	// log.Println("Holding onto an ActionDispatcher. Waiting for a stub ActionResponse telling us who this is...")
 	who, err := s.Recv()
 	if err != nil {
 		log.Println(err)
@@ -58,6 +65,7 @@ func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 	hostname := who.Hostname
 
 	// Assign the dispatcher for this host
+	log.Println("ActionDispatcher is open for", who.Hostname)
 	k.State.Hosts[HostName(hostname)].Dispatcher = s
 
 	// Keep the dispatcher alive so we can send actions later

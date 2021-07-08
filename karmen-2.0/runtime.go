@@ -53,7 +53,7 @@ func (k *karmen) evaluateConditions(conditions map[ConditionName]ConditionValue,
 					if isVariable(token) {
 						debugPrintln("Found variable:", token)
 						// until I get the AST figured out for this...assume it is a passString
-						if val, ok := k.State.Events[UUID(uuid.String())].Results[Variable(token)]; ok {
+						if val, ok := k.State.Events[UUID(uuid.String())][Variable(token)]; ok {
 							//this key exists - does it pass?
 							debugPrintln("Found a", val)
 							if val == "true" {
@@ -113,6 +113,7 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 			// Form that into a request
 			request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
 			// Send the request
+			log.Println("Dispatching action:", action.ActionName, "on", action.HostName)
 			err := k.State.Hosts[action.HostName].Dispatcher.Send(request)
 			if err != nil {
 				log.Println(err)
@@ -122,6 +123,8 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 			if err != nil {
 				log.Println(err)
 			}
+			log.Println("Action response:")
+			log.Println(response)
 			// Parse the return code - may be expanded later
 
 			var passString string
@@ -133,11 +136,12 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 			}
 
 			// Store the state of this action
+			k.State.Events[UUID(uuid.String())] = make(map[Variable]VariableValue)
 			for key, val := range response.Result.Parameters {
-				k.State.Events[UUID(uuid.String())].Results[Variable(action.HostName)+Variable(key)] = VariableValue(val)
+				k.State.Events[UUID(uuid.String())][Variable(action.HostName)+Variable(key)] = VariableValue(val)
 			}
 			// Store the overall result
-			k.State.Events[UUID(uuid.String())].Results[Variable(action.HostName)+".pass"] = VariableValue(passString)
+			k.State.Events[UUID(uuid.String())][Variable(action.HostName)+".pass"] = VariableValue(passString)
 		} else {
 			log.Println("Skipping", block.Type, " because condition failed")
 		}

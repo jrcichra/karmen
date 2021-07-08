@@ -1,0 +1,72 @@
+syntax = "proto3";
+
+option go_package = "github.com/jrcichra/karmen";
+
+service Karmen {
+    rpc Register (RegisterRequest) returns (RegisterResponse);
+    rpc EmitEvent (EventRequest) returns (EventResponse);
+    rpc ActionDispatcher (stream ActionResponse) returns (stream ActionRequest);
+    rpc PingPong (Ping) returns (Pong);
+}
+
+message Ping {
+    string message = 1;
+}
+
+message Pong {
+    string message = 1;
+}
+
+message RegisterRequest {
+    string name = 1;
+    int64 timestamp = 2;
+    map<string,string> events = 3;
+    map<string,string> actions = 4;
+}
+
+message RegisterResponse {
+    RegisterRequest request = 1;
+    Result result = 2; 
+}
+
+message Result {
+    int64 code = 1;
+    map<string,string> parameters = 2;
+}
+
+message Event {
+    string eventName = 1;
+    int64 timestamp = 2;
+    map<string, string> parameters = 3;
+}
+
+message Action {
+    string actionName = 1;
+    int64 timestamp = 2;
+    map<string,string> parameters = 3;
+}
+
+message ActionRequest {
+    Action action = 1;
+    string uuid = 2;
+    string requesterName = 3;
+}
+
+message ActionResponse {
+    ActionRequest request = 1;
+    Result result = 2;
+    // Unfortunately, for context, we need an ActionResponse from the client off the bat with just 'hostname'
+    // so we know who's who when sending actions
+    string hostname = 3;
+}
+
+message EventRequest {
+    Event event = 1;
+    string uuid = 2;
+    string requesterName = 3;
+}
+
+message EventResponse {
+    EventRequest request = 1;
+    Result result = 2;
+}
