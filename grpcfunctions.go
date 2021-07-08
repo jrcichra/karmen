@@ -18,6 +18,15 @@ type karmen struct {
 //Register - register a container
 func (k *karmen) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.RegisterResponse, error) {
 	log.Printf("Received Register for: %v", in.GetName())
+
+	// If we're handling a register, ability to recover and cancel the job
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("[Register] - Something went terribly wrong in", r)
+			log.Println("[Register] - Most likely we lost connection to", in.Name, "mid registration")
+		}
+	}()
+
 	//if someone is there, deallocate it before recreating
 	if _, ok := k.State.Hosts[HostName(in.GetName())]; ok {
 		select {
@@ -79,6 +88,14 @@ func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 
 	// hostname is the name of the host. We'll use this hostname to map a hostname with this dispatcher
 	hostname := who.Hostname
+
+	// If we're handling a dispatcher, ability to recover and cancel the job
+	defer func() {
+		if r := recover(); r != nil {
+			log.Println("[ActionDispatcher] - Something went terribly wrong in", r)
+			log.Println("[ActionDispatcher] - Most likely we lost connection to", hostname)
+		}
+	}()
 
 	// Assign the dispatcher for this host
 	log.Println("ActionDispatcher is open for", who.Hostname)
