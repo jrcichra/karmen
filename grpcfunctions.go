@@ -66,11 +66,22 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	k.State.Events = make(map[UUID]Results)
 
 	// Run through the blocks
+	overallResult := true
 	for _, block := range event.Blocks {
-		k.runBlock(block, in.RequesterName, uuid)
+		res := k.runBlock(block, in.RequesterName, uuid)
+		if !res {
+			overallResult = false
+		}
 	}
 
-	k.eventPrint(uuid, "Event", in.GetEvent().EventName, "completed")
+	var overallString string
+	if overallResult {
+		overallString = "pass"
+	} else {
+		overallString = "fail"
+	}
+
+	k.eventPrint(uuid, "Event", in.GetEvent().EventName, "completed with a result of", overallString)
 
 	// When the event is done, delete the result history
 	delete(k.State.Events, UUID(uuid.String()))

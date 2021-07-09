@@ -1,9 +1,11 @@
 events:
   bob.event:
-    - serial:
+    - parallel:
         - bob.action:
             - akey: fromyaml
         - bob.action:
             - one: uno
             - two: dos
             - three: trio
+    - serial:
+        - bob.action
