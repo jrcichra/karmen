@@ -4,6 +4,21 @@
 
 Centralized Pub/Sub for microservices
 
+
+# 2.0 release
++ I rewrote Karmen from the ground up in July 2021. It is incompatible with version 1.0.
+## Enhancements
++ Karmen now runs off of gRPC, which cuts down lots of nasty bugs
++ `if:` as a key under an action is now a reserved word for conditional expressions
++ `parallel` and `serial` blocks should perform how you expect...each block is done serially
++ Context variables - actions can return parameters that are injected into a block-level state. These can be referenced in conditionals with `{hostname-action-variablename}`
+    + I'll be converting the dashes to dots once I add that feature to the condition parser I used
+    + For each action, the `{hostname-action-pass}` boolean is set automatically so you can conditionally run actions based on the result of previous actions without managing a parameter. Code 200 is defined as a `pass`
++ Action error handling is improved, currently returning HTTP-like codes. I may downgrade this to a boolean
+## Bugs
++ Prone to crashes - if the clients aren't set up right or die, karmen may crash
++ In the meantime, please have the container `--restart=unless-stopped` or have a systemd service keep it up
+
 ## Get Started
 ### Using Karmen (Server):
 1. See [Docker Hub](https://github.com/jrcichra/karmen/releases) for releases

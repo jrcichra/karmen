@@ -3,7 +3,7 @@
 import threading
 import time
 import queue
-
+import socket
 import grpc
 
 import karmen_pb2 as pb
@@ -11,7 +11,7 @@ import karmen_pb2_grpc as pb_grpc
 
 
 class Karmen:
-    def __init__(self, name="", hostname="localhost", port=8080):
+    def __init__(self, name=socket.gethostname(), hostname="localhost", port=8080):
         super().__init__()
         self.name = name
         self.channel = grpc.insecure_channel(f"{hostname}:{port}")
