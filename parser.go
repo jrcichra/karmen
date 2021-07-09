@@ -153,8 +153,8 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 
 	if len(action.Content) == 2 {
 		for i := 0; i < len(action.Content[1].Content); i++ {
-			c.parseParameter(ParameterName(action.Content[1].Content[i].Content[0].Value),
-				action.Content[1].Content[i].Content[1], parameters, conditions)
+			c.parseParameterCondition(ParameterName(action.Content[1].Content[i].Content[0].Value),
+				ParameterValue(action.Content[1].Content[i].Content[1].Value), parameters, conditions)
 		}
 	}
 
@@ -163,8 +163,7 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 
 }
 
-func (c *Config) parseParameter(name ParameterName, parameters *yaml.Node, pMap map[ParameterName]ParameterValue, cMap map[ConditionName]ConditionValue) {
-	value := parameters.Value
+func (c *Config) parseParameterCondition(name ParameterName, value ParameterValue, pMap map[ParameterName]ParameterValue, cMap map[ConditionName]ConditionValue) {
 	// log.Println("parseParameter() -", name+":", value)
 
 	if name == "if" {
@@ -186,7 +185,7 @@ func (c *Config) parseCondition(name ConditionName, value ConditionValue, cMap m
 		switch token {
 		case "&&", "||":
 			// log.Println("Found join:", token)
-		case ">", "<", "<=", ">=", "==":
+		case ">", "<", "<=", ">=", "==", "!=":
 			// log.Println("Found comparison:", token)
 		default:
 			//determine if variable or primitive
@@ -229,7 +228,7 @@ func isInt(s string) bool {
 func isVariable(s string) bool {
 	res := true
 	for _, c := range s {
-		if !unicode.IsLetter(c) && !unicode.IsNumber(c) && c != '.' {
+		if !unicode.IsLetter(c) && !unicode.IsNumber(c) && c != '-' && c != '{' && c != '}' {
 			res = false
 			break
 		}

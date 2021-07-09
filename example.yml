@@ -1,11 +1,10 @@
 events:
   bob.event:
-    - parallel:
+    - serial:
         - bob.action:
             - akey: fromyaml
         - bob.action:
+            - if: "{bob-action-pass}" # will change to dots when I fork the parser
             - one: uno
             - two: dos
             - three: trio
-    - serial:
-        - bob.action

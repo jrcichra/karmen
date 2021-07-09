@@ -2,10 +2,12 @@ package main
 
 import (
 	"log"
+	"strconv"
 	"strings"
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/jrcichra/conditions"
 	pb "github.com/jrcichra/karmen/grpc"
 )
 
@@ -18,67 +20,52 @@ func (k *karmen) dumbDownParamMap(m map[ParameterName]ParameterValue) map[string
 	return newMap
 }
 
-// Each condition is a string of <type> :
-//TODO :: WIP on AST for crazy conditions
-func (k *karmen) evaluateConditions(conditions map[ConditionName]ConditionValue, uuid uuid.UUID) (bool, bool) {
+func dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
+	newMap := make(map[string]interface{})
+	for key, val := range m {
+		switch val {
+		case "true", "false":
+			b, _ := strconv.ParseBool(string(val))
+			newMap[string(key)] = b
+		default:
+			newMap[string(key)] = string(val)
+		}
+	}
+	return newMap
+}
+
+func (k *karmen) evaluateConditions(cMap map[ConditionName]ConditionValue, uuid uuid.UUID) (bool, bool) {
 	b := true
 	fail := false
-	for key, val := range conditions {
+	for key, val := range cMap {
 		if key != "if" {
-			log.Println("evaluateConditions() runtime error. Key should be 'if:'. Failing the job")
+			k.eventPrint(uuid, "evaluateConditions() runtime error 1. Key should be 'if:'. Failing the job")
 			b = false
 			fail = true
 			break
 		}
-		tokens := strings.Fields(string(val))
-		for _, token := range tokens {
-			switch token {
-			case "(":
-			case ")":
-			case "&&":
-			case "||":
-			case ">":
-			case "<":
-			case "<=":
-			case ">=":
-			case "==":
-			default:
-				//determine if variable or primitive
-				if isInt(token) {
-					// log.Println("Found int:", token)
-				} else if isFloat(token) {
-					// log.Println("Found float:", token)
-				} else {
-					// make sure the variable doesn't have special characters besides periods
-					if isVariable(token) {
-						debugPrintln("Found variable:", token)
-						// until I get the AST figured out for this...assume it is a passString
-						if val, ok := k.State.Events[UUID(uuid.String())][Variable(token)]; ok {
-							//this key exists - does it pass?
-							debugPrintln("Found a", val)
-							if val == "true" {
-								b = true
-								fail = false
-							} else if val == "false" {
-								b = false
-								fail = false
-							} else {
-								log.Println("passString was not true or false. It was " + val + ". Something is really wrong")
-							}
-						} else {
-							log.Println("Invalid token.", token, "is not variable but was not defined at the time it was called")
-							b = false
-							fail = true
-							break
-						}
-					} else {
-						log.Println("Invalid token.", token, "is not a valid variable")
-						b = false
-						fail = true
-						break
-					}
-				}
-			}
+		p := conditions.NewParser(strings.NewReader(string(val)))
+		expr, err := p.Parse()
+		if err != nil {
+			k.eventPrint(uuid, "evaluateConditions() runtime error 2.")
+			k.eventPrint(uuid, err)
+			b = false
+			fail = true
+			break
+		}
+
+		b, err = conditions.Evaluate(expr, dumbDownStateMap(k.State.Events[UUID(uuid.String())]))
+		if err != nil {
+			k.eventPrint(uuid, "evaluateConditions() runtime error 3.")
+			k.eventPrint(uuid, err)
+			b = false
+			fail = true
+			break
+		}
+		k.eventPrint(uuid, "evaluateConditions() got a", b, "on condition", val)
+		// break on a false
+		if !b {
+			break
 		}
 	}
 	return b, fail
@@ -113,7 +100,7 @@ func (k *karmen) runSerialBlock(block *Block, requesterName string, uuid uuid.UU
 				overallResult = false
 			}
 		} else {
-			k.eventPrint(uuid, "Skipping", block.Type, " because condition failed")
+			k.eventPrint(uuid, "Skipping action", action.ActionName, "because condition failed")
 		}
 	}
 	return overallResult
@@ -141,7 +128,7 @@ func (k *karmen) runParallelBlock(block *Block, requesterName string, uuid uuid.
 				res := k.runAction(uuid, a, requesterName)
 				c <- Data{Action: a, Result: res, Skipped: false}
 			} else {
-				k.eventPrint(uuid, "Skipping", block.Type, " because condition failed")
+				k.eventPrint(uuid, "Skipping", block.Type, "because a condition failed")
 				c <- Data{Action: a, Result: true, Skipped: true}
 			}
 		}(action, c)
@@ -164,6 +151,11 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	a := &pb.Action{ActionName: string(action.ActionName), Timestamp: time.Now().Unix(), Parameters: k.dumbDownParamMap(action.Parameters)}
 	// Form that into a request
 	request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
+	// wait for us to have a dispatcher
+	for k.State.Hosts[action.HostName].Dispatcher == nil {
+		log.Println("Waiting for dispatcher...")
+		time.Sleep(1 * time.Second)
+	}
 	// Send the request
 	k.eventPrint(uuid, "Dispatching action:", action.ActionName, "on", action.HostName)
 	err := k.State.Hosts[action.HostName].Dispatcher.Send(request)
@@ -192,10 +184,10 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	// Store the state of this action
 	k.State.Events[UUID(uuid.String())] = make(map[Variable]VariableValue)
 	for key, val := range response.Result.Parameters {
-		k.State.Events[UUID(uuid.String())][Variable(action.HostName)+Variable(key)] = VariableValue(val)
+		k.State.Events[UUID(uuid.String())][Variable(action.HostName)+"-"+Variable(key)] = VariableValue(val)
 	}
 	// Store the overall result
-	k.State.Events[UUID(uuid.String())][Variable(action.HostName)+".pass"] = VariableValue(passString)
+	k.State.Events[UUID(uuid.String())][Variable(action.HostName)+"-"+Variable(action.ActionName)+"-pass"] = VariableValue(passString)
 
 	return pass
 }

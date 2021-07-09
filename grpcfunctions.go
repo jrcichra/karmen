@@ -5,6 +5,8 @@ import (
 	"errors"
 	"log"
 
+	debugpkg "runtime/debug"
+
 	"github.com/google/uuid"
 	pb "github.com/jrcichra/karmen/grpc"
 )
@@ -23,6 +25,7 @@ func (k *karmen) Register(ctx context.Context, in *pb.RegisterRequest) (*pb.Regi
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("[Register] - Something went terribly wrong in", r)
+			log.Println("[Register] - stacktrace from panic: \n" + string(debugpkg.Stack()))
 			log.Println("[Register] - Most likely we lost connection to", in.Name, "mid registration")
 		}
 	}()
@@ -48,6 +51,7 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("[EmitEvent] - Something went terribly wrong in", r)
+			log.Println("[EmitEvent] - stacktrace from panic: \n" + string(debugpkg.Stack()))
 			log.Println("[EmitEvent] - Most likely we lost connection to", in.RequesterName, "mid event:", in.Event.GetEventName())
 		}
 	}()
@@ -103,6 +107,7 @@ func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 	defer func() {
 		if r := recover(); r != nil {
 			log.Println("[ActionDispatcher] - Something went terribly wrong in", r)
+			log.Println("[ActionDispatcher] - stacktrace from panic: \n" + string(debugpkg.Stack()))
 			log.Println("[ActionDispatcher] - Most likely we lost connection to", hostname)
 		}
 	}()
