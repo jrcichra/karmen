@@ -1,6 +1,6 @@
 events:
   bob.pleaseSleep:
-    - serial:
+    - parallel:
         - bob.sleep:
             - seconds: 5
         - bob.sleep:

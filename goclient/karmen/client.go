@@ -42,8 +42,6 @@ func (k *KarmenClient) Register(hostname string, port int) error {
 		&pb.RegisterRequest{
 			Name:      k.Name,
 			Timestamp: time.Now().Unix(),
-			Events:    map[string]string{"event": "event"},
-			Actions:   map[string]string{"action": "action"},
 		})
 	if err != nil {
 		panic(err)
