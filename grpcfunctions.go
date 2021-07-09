@@ -60,7 +60,7 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	event := k.Config.Events[in.RequesterName+"."+in.Event.GetEventName()]
 
 	if event == nil {
-		err := errors.New("Event '" + in.GetEvent().EventName + "' was not found in the YAML. Cannot launch it")
+		err := errors.New("Event '" + in.RequesterName + "." + in.Event.GetEventName() + "' was not found in the YAML. Cannot launch it")
 		log.Println(err)
 		return &pb.EventResponse{Request: in, Result: &pb.Result{Code: 500}}, err
 	}

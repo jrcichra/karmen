@@ -1,79 +1,36 @@
 package main
 
 import (
-	"context"
 	"log"
+	"strconv"
 	"time"
 
-	"github.com/davecgh/go-spew/spew"
-	pb "github.com/jrcichra/karmen/goclient/grpc"
-	"google.golang.org/grpc"
+	"github.com/jrcichra/karmen/goclient/karmen"
 )
 
-const name = "bob"
-
-func register(client pb.KarmenClient) {
-	response, err := client.Register(context.Background(),
-		&pb.RegisterRequest{
-			Name:      name,
-			Timestamp: time.Now().Unix(),
-			Events:    map[string]string{"event": "event"},
-			Actions:   map[string]string{"action": "action"},
-		})
+func sleep(parameters map[string]string) *karmen.Result {
+	result := &karmen.Result{}
+	seconds, err := strconv.Atoi(parameters["seconds"])
 	if err != nil {
-		panic(err)
+		log.Println(err)
+		result.Code = 500
+	} else {
+		log.Println("Sleeping for", seconds, "seconds")
+		time.Sleep(time.Duration(seconds) * time.Second)
+		log.Println("Done sleeping")
+		result.Code = 200
 	}
-	log.Println(response)
-}
-
-func handleActions(client pb.KarmenClient) {
-	dispatcher, err := client.ActionDispatcher(context.Background())
-	if err != nil {
-		panic(err)
-	}
-	err = dispatcher.Send(&pb.ActionResponse{Hostname: name})
-	if err != nil {
-		panic(err)
-	}
-	go func() {
-		for {
-			msg, err := dispatcher.Recv()
-			if err != nil {
-				panic(err)
-			}
-			go func() {
-				log.Println(msg.RequesterName, "requested I run", msg.Action.ActionName+". It's going to take me a few seconds...")
-				log.Println("Parameters:")
-				spew.Dump(msg.Action.Parameters)
-				time.Sleep(5 * time.Second)
-				log.Println("Finished running", msg.Action.ActionName, "for", msg.RequesterName)
-				result := &pb.Result{Code: 500, Parameters: map[string]string{"asdf": "1234"}}
-				dispatcher.Send(&pb.ActionResponse{Result: result})
-			}()
-		}
-	}()
-}
-
-func sendEvent(client pb.KarmenClient) {
-	event := &pb.Event{EventName: "event", Timestamp: time.Now().Unix(), Parameters: map[string]string{"justin": "rocks"}}
-	response, err := client.EmitEvent(context.Background(), &pb.EventRequest{RequesterName: name, Event: event})
-	if err != nil {
-		panic(err)
-	}
-	log.Println(response)
+	return result
 }
 
 func main() {
-	var opts []grpc.DialOption
-	opts = append(opts, grpc.WithInsecure())
-	conn, err := grpc.Dial("127.0.0.1:8080", opts...)
+	k := karmen.KarmenClient{}
+	k.Init("bob")
+	k.AddAction(sleep, "sleep")
+	k.Register("127.0.0.1", 8080)
+	result, err := k.RunEvent("pleaseSleep")
 	if err != nil {
 		panic(err)
 	}
-	defer conn.Close()
-	client := pb.NewKarmenClient(conn)
-	register(client)
-	handleActions(client)
-	sendEvent(client)
-	select {}
+	log.Println("Result of pleaseSleep is:", result.Result.Code)
 }

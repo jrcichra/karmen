@@ -1,10 +1,9 @@
 events:
-  bob.event:
+  bob.pleaseSleep:
     - serial:
-        - bob.action:
-            - akey: fromyaml
-        - bob.action:
-            - if: "{bob-action-pass}" # will change to dots when I fork the parser
-            - one: uno
-            - two: dos
-            - three: trio
+        - bob.sleep:
+            - seconds: 5
+        - bob.sleep:
+            - seconds: 1
+        - bob.sleep:
+            - seconds: 10
