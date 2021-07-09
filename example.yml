@@ -1,0 +1,15 @@
+events:
+  bob.pleaseSleep:
+    - parallel:
+        - bob.sleep:
+            - seconds: 5
+        - bob.sleep:
+            - seconds: 1
+        - bob.sleep:
+            - seconds: 10
+    - serial:
+        - bob.sleep:
+            - seconds: 2
+        - bob.sleep:
+            - seconds: 2
+            - if: 5 != 5
