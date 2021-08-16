@@ -38,9 +38,12 @@ func loadConfig(filename string) *Config {
 
 func main() {
 	// get the first argument as the config file
+	// or check for the environment variable KARMEN_CONFIG
 	if len(os.Args) > 1 {
 		configFile := os.Args[1]
 		serveGRPC(loadConfig(configFile))
+	} else if os.Getenv("KARMEN_CONFIG") != "" {
+		serveGRPC(loadConfig(os.Getenv("KARMEN_CONFIG")))
 	} else {
 		log.Println("Usage: karmen <config file>")
 	}
