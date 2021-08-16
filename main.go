@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"net"
+	"os"
 
 	pb "github.com/jrcichra/karmen/grpc"
 	"google.golang.org/grpc"
@@ -36,5 +37,11 @@ func loadConfig(filename string) *Config {
 }
 
 func main() {
-	serveGRPC(loadConfig("example.yml"))
+	// get the first argument as the config file
+	if len(os.Args) > 1 {
+		configFile := os.Args[1]
+		serveGRPC(loadConfig(configFile))
+	} else {
+		log.Println("Usage: karmen <config file>")
+	}
 }
