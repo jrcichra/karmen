@@ -1,1 +1,1 @@
-from karmen.karmen import Karmen
+import karmen.karmen as karmen
