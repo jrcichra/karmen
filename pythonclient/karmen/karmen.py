@@ -18,6 +18,9 @@ class Karmen:
         self.stub = pb_grpc.KarmenStub(self.channel)
         self.actions = {}
 
+    def Pass(self) -> int:
+        return 200
+
     def ping(self) -> str:
         result = self.stub.PingPong(pb.Ping(message="Python!"))
         return result.message

@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="karmen",
-    version="v2.0.2",
+    version="v2.0.3",
     author="Justin Cichra",
     author_email="justin@none.com",
     description="The karmen python library",
@@ -20,7 +20,7 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    package_dir={"": "."},
-    packages=setuptools.find_packages(where="."),
+    package_dir={"": "karmen"},
+    packages=setuptools.find_packages(where="karmen"),
     python_requires=">=3.7",
 )
