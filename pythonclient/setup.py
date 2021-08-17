@@ -20,6 +20,6 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    packages=['karmen', 'karmen_pb2', 'karmen_pb2_grpc'],
+    packages=['karmen'],
     python_requires=">=3.7",
 )
