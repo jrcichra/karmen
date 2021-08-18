@@ -25,10 +25,10 @@ class Karmen:
         result = self.stub.PingPong(pb.Ping(message="Python!"))
         return result.message
 
-    def runEvent(self, name, params=None):
+    def runEvent(self, name, parameters=None):
         event = pb.Event(eventName=name, timestamp=int(time.time()))
         result = self.stub.EmitEvent(pb.EventRequest(
-            requesterName=self.name, event=event, params=params))
+            requesterName=self.name, event=event, parameters=parameters))
         return result
 
     def addAction(self, func, name):
