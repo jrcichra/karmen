@@ -152,14 +152,19 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	// Form that into a request
 	request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
 	// wait for us to have a dispatcher
-	if _, ok := k.State.Hosts[action.HostName]; ok {
-		for k.State.Hosts[action.HostName].Dispatcher == nil {
-			log.Println("Waiting for dispatcher on host " + action.HostName + "...")
+	for {
+		if _, ok := k.State.Hosts[action.HostName]; ok {
+			if k.State.Hosts[action.HostName].Dispatcher == nil {
+				log.Println("Waiting for dispatcher on host " + action.HostName + "...")
+				time.Sleep(1 * time.Second)
+			} else {
+				// We have a dispatcher, so we can break out of the loop
+				break
+			}
+		} else {
+			log.Println("Waiting for host " + action.HostName + "...")
 			time.Sleep(1 * time.Second)
 		}
-	} else {
-		log.Println("Waiting for host " + action.HostName + "...")
-		time.Sleep(1 * time.Second)
 	}
 	// Send the request
 	k.eventPrint(uuid, "Dispatching action:", action.ActionName, "on", action.HostName)
