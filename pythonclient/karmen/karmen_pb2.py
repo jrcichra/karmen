@@ -19,7 +19,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   name='karmen.proto',
   package='',
   syntax='proto3',
-  serialized_pb=_b('\n\x0ckarmen.proto\"\x17\n\x04Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x17\n\x04Pong\x12\x0f\n\x07message\x18\x01 \x01(\t\"\xef\x01\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12,\n\x06\x65vents\x18\x03 \x03(\x0b\x32\x1c.RegisterRequest.EventsEntry\x12.\n\x07\x61\x63tions\x18\x04 \x03(\x0b\x32\x1d.RegisterRequest.ActionsEntry\x1a-\n\x0b\x45ventsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a.\n\x0c\x41\x63tionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"N\n\x10RegisterResponse\x12!\n\x07request\x18\x01 \x01(\x0b\x32\x10.RegisterRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\"v\n\x06Result\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x03\x12+\n\nparameters\x18\x02 \x03(\x0b\x32\x17.Result.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8c\x01\n\x05\x45vent\x12\x11\n\teventName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12*\n\nparameters\x18\x03 \x03(\x0b\x32\x16.Event.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8f\x01\n\x06\x41\x63tion\x12\x12\n\nactionName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12+\n\nparameters\x18\x03 \x03(\x0b\x32\x17.Action.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"M\n\rActionRequest\x12\x17\n\x06\x61\x63tion\x18\x01 \x01(\x0b\x32\x07.Action\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\"\\\n\x0e\x41\x63tionResponse\x12\x1f\n\x07request\x18\x01 \x01(\x0b\x32\x0e.ActionRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\x12\x10\n\x08hostname\x18\x03 \x01(\t\"J\n\x0c\x45ventRequest\x12\x15\n\x05\x65vent\x18\x01 \x01(\x0b\x32\x06.Event\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\"H\n\rEventResponse\x12\x1e\n\x07request\x18\x01 \x01(\x0b\x32\r.EventRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result2\xb8\x01\n\x06Karmen\x12/\n\x08Register\x12\x10.RegisterRequest\x1a\x11.RegisterResponse\x12*\n\tEmitEvent\x12\r.EventRequest\x1a\x0e.EventResponse\x12\x37\n\x10\x41\x63tionDispatcher\x12\x0f.ActionResponse\x1a\x0e.ActionRequest(\x01\x30\x01\x12\x18\n\x08PingPong\x12\x05.Ping\x1a\x05.PongB\x1cZ\x1agithub.com/jrcichra/karmenb\x06proto3')
+  serialized_pb=_b('\n\x0ckarmen.proto\"\x17\n\x04Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x17\n\x04Pong\x12\x0f\n\x07message\x18\x01 \x01(\t\"\xef\x01\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12,\n\x06\x65vents\x18\x03 \x03(\x0b\x32\x1c.RegisterRequest.EventsEntry\x12.\n\x07\x61\x63tions\x18\x04 \x03(\x0b\x32\x1d.RegisterRequest.ActionsEntry\x1a-\n\x0b\x45ventsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a.\n\x0c\x41\x63tionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"N\n\x10RegisterResponse\x12!\n\x07request\x18\x01 \x01(\x0b\x32\x10.RegisterRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\"v\n\x06Result\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x03\x12+\n\nparameters\x18\x02 \x03(\x0b\x32\x17.Result.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8c\x01\n\x05\x45vent\x12\x11\n\teventName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12*\n\nparameters\x18\x03 \x03(\x0b\x32\x16.Event.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8f\x01\n\x06\x41\x63tion\x12\x12\n\nactionName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12+\n\nparameters\x18\x03 \x03(\x0b\x32\x17.Action.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"M\n\rActionRequest\x12\x17\n\x06\x61\x63tion\x18\x01 \x01(\x0b\x32\x07.Action\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\"\\\n\x0e\x41\x63tionResponse\x12\x1f\n\x07request\x18\x01 \x01(\x0b\x32\x0e.ActionRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\x12\x10\n\x08hostname\x18\x03 \x01(\t\"\xb0\x01\n\x0c\x45ventRequest\x12\x15\n\x05\x65vent\x18\x01 \x01(\x0b\x32\x06.Event\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\x12\x31\n\nparameters\x18\x04 \x03(\x0b\x32\x1d.EventRequest.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"H\n\rEventResponse\x12\x1e\n\x07request\x18\x01 \x01(\x0b\x32\r.EventRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result2\xb8\x01\n\x06Karmen\x12/\n\x08Register\x12\x10.RegisterRequest\x1a\x11.RegisterResponse\x12*\n\tEmitEvent\x12\r.EventRequest\x1a\x0e.EventResponse\x12\x37\n\x10\x41\x63tionDispatcher\x12\x0f.ActionResponse\x1a\x0e.ActionRequest(\x01\x30\x01\x12\x18\n\x08PingPong\x12\x05.Ping\x1a\x05.PongB\x1cZ\x1agithub.com/jrcichra/karmenb\x06proto3')
 )
 
 
@@ -580,6 +580,43 @@ _ACTIONRESPONSE = _descriptor.Descriptor(
 )
 
 
+_EVENTREQUEST_PARAMETERSENTRY = _descriptor.Descriptor(
+  name='ParametersEntry',
+  full_name='EventRequest.ParametersEntry',
+  filename=None,
+  file=DESCRIPTOR,
+  containing_type=None,
+  fields=[
+    _descriptor.FieldDescriptor(
+      name='key', full_name='EventRequest.ParametersEntry.key', index=0,
+      number=1, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='value', full_name='EventRequest.ParametersEntry.value', index=1,
+      number=2, type=9, cpp_type=9, label=1,
+      has_default_value=False, default_value=_b("").decode('utf-8'),
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
+  ],
+  extensions=[
+  ],
+  nested_types=[],
+  enum_types=[
+  ],
+  options=_descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001')),
+  is_extendable=False,
+  syntax='proto3',
+  extension_ranges=[],
+  oneofs=[
+  ],
+  serialized_start=457,
+  serialized_end=506,
+)
+
 _EVENTREQUEST = _descriptor.Descriptor(
   name='EventRequest',
   full_name='EventRequest',
@@ -608,10 +645,17 @@ _EVENTREQUEST = _descriptor.Descriptor(
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
+    _descriptor.FieldDescriptor(
+      name='parameters', full_name='EventRequest.parameters', index=3,
+      number=4, type=11, cpp_type=10, label=3,
+      has_default_value=False, default_value=[],
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      options=None, file=DESCRIPTOR),
   ],
   extensions=[
   ],
-  nested_types=[],
+  nested_types=[_EVENTREQUEST_PARAMETERSENTRY, ],
   enum_types=[
   ],
   options=None,
@@ -620,8 +664,8 @@ _EVENTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=970,
-  serialized_end=1044,
+  serialized_start=971,
+  serialized_end=1147,
 )
 
 
@@ -658,8 +702,8 @@ _EVENTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1046,
-  serialized_end=1118,
+  serialized_start=1149,
+  serialized_end=1221,
 )
 
 _REGISTERREQUEST_EVENTSENTRY.containing_type = _REGISTERREQUEST
@@ -677,7 +721,9 @@ _ACTION.fields_by_name['parameters'].message_type = _ACTION_PARAMETERSENTRY
 _ACTIONREQUEST.fields_by_name['action'].message_type = _ACTION
 _ACTIONRESPONSE.fields_by_name['request'].message_type = _ACTIONREQUEST
 _ACTIONRESPONSE.fields_by_name['result'].message_type = _RESULT
+_EVENTREQUEST_PARAMETERSENTRY.containing_type = _EVENTREQUEST
 _EVENTREQUEST.fields_by_name['event'].message_type = _EVENT
+_EVENTREQUEST.fields_by_name['parameters'].message_type = _EVENTREQUEST_PARAMETERSENTRY
 _EVENTRESPONSE.fields_by_name['request'].message_type = _EVENTREQUEST
 _EVENTRESPONSE.fields_by_name['result'].message_type = _RESULT
 DESCRIPTOR.message_types_by_name['Ping'] = _PING
@@ -797,11 +843,19 @@ ActionResponse = _reflection.GeneratedProtocolMessageType('ActionResponse', (_me
 _sym_db.RegisterMessage(ActionResponse)
 
 EventRequest = _reflection.GeneratedProtocolMessageType('EventRequest', (_message.Message,), dict(
+
+  ParametersEntry = _reflection.GeneratedProtocolMessageType('ParametersEntry', (_message.Message,), dict(
+    DESCRIPTOR = _EVENTREQUEST_PARAMETERSENTRY,
+    __module__ = 'karmen_pb2'
+    # @@protoc_insertion_point(class_scope:EventRequest.ParametersEntry)
+    ))
+  ,
   DESCRIPTOR = _EVENTREQUEST,
   __module__ = 'karmen_pb2'
   # @@protoc_insertion_point(class_scope:EventRequest)
   ))
 _sym_db.RegisterMessage(EventRequest)
+_sym_db.RegisterMessage(EventRequest.ParametersEntry)
 
 EventResponse = _reflection.GeneratedProtocolMessageType('EventResponse', (_message.Message,), dict(
   DESCRIPTOR = _EVENTRESPONSE,
@@ -823,6 +877,8 @@ _EVENT_PARAMETERSENTRY.has_options = True
 _EVENT_PARAMETERSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 _ACTION_PARAMETERSENTRY.has_options = True
 _ACTION_PARAMETERSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
+_EVENTREQUEST_PARAMETERSENTRY.has_options = True
+_EVENTREQUEST_PARAMETERSENTRY._options = _descriptor._ParseOptions(descriptor_pb2.MessageOptions(), _b('8\001'))
 
 _KARMEN = _descriptor.ServiceDescriptor(
   name='Karmen',
@@ -830,8 +886,8 @@ _KARMEN = _descriptor.ServiceDescriptor(
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1121,
-  serialized_end=1305,
+  serialized_start=1224,
+  serialized_end=1408,
   methods=[
   _descriptor.MethodDescriptor(
     name='Register',

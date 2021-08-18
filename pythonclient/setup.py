@@ -5,7 +5,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
 
 setuptools.setup(
     name="karmen",
-    version="v2.0.4",
+    version="v2.0.5",
     author="Justin Cichra",
     author_email="justin@none.com",
     description="The karmen python library",
