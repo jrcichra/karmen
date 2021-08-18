@@ -6,8 +6,8 @@ import queue
 import socket
 import grpc
 
-import karmen_pb2 as pb
-import karmen_pb2_grpc as pb_grpc
+from karmen import karmen_pb2 as pb
+from karmen import karmen_pb2_grpc as pb_grpc
 
 
 class Karmen:
