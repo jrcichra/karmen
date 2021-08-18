@@ -34,6 +34,18 @@ func dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
 	return newMap
 }
 
+// m2 takes precendence over m1
+func combineParamMaps(m1, m2 map[ParameterName]ParameterValue) map[ParameterName]ParameterValue {
+	newMap := make(map[ParameterName]ParameterValue)
+	for k, v := range m1 {
+		newMap[k] = v
+	}
+	for k, v := range m2 {
+		newMap[k] = v
+	}
+	return newMap
+}
+
 func (k *karmen) evaluateConditions(cMap map[ConditionName]ConditionValue, uuid uuid.UUID) (bool, bool) {
 	b := true
 	fail := false
@@ -147,8 +159,9 @@ func (k *karmen) runParallelBlock(block *Block, requesterName string, uuid uuid.
 }
 
 func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string) bool {
-	// Build a grpc action
-	a := &pb.Action{ActionName: string(action.ActionName), Timestamp: time.Now().Unix(), Parameters: k.dumbDownParamMap(action.Parameters)}
+	// Build a grpc action - building in the actions from the static yaml and runtime actions
+	// runtime parameters take precedence over static parameters
+	a := &pb.Action{ActionName: string(action.ActionName), Timestamp: time.Now().Unix(), Parameters: k.dumbDownParamMap(combineParamMaps(action.Parameters, k.State.EventStates[UUID(uuid.String())]))}
 	// Form that into a request
 	request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
 	// wait for us to have a dispatcher
@@ -182,14 +195,14 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	// Parse the return code - may be expanded later
 
 	var passString string
-	var pass bool
-	if isPass(response.Result.Code) {
+	pass := isPass(response.Result.Code)
+	if pass {
 		passString = "true"
-		pass = true
 	} else {
 		passString = "false"
-		pass = false
 	}
+
+	// TODO consider passing through response params to the event state
 
 	// Store the state of this action
 	k.State.Events[UUID(uuid.String())] = make(map[Variable]VariableValue)

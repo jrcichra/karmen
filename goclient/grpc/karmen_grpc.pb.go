@@ -238,5 +238,5 @@ var Karmen_ServiceDesc = grpc.ServiceDesc{
 			ClientStreams: true,
 		},
 	},
-	Metadata: "karmen.proto",
+	Metadata: "grpc/karmen.proto",
 }

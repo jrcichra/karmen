@@ -85,9 +85,9 @@ func (k *KarmenClient) handleActions() {
 	}
 }
 
-func (k *KarmenClient) RunEvent(name string) (*pb.EventResponse, error) {
+func (k *KarmenClient) RunEvent(name string, params map[string]string) (*pb.EventResponse, error) {
 	event := &pb.Event{EventName: name, Timestamp: time.Now().Unix()}
-	return k.pb.EmitEvent(context.Background(), &pb.EventRequest{RequesterName: k.Name, Event: event})
+	return k.pb.EmitEvent(context.Background(), &pb.EventRequest{RequesterName: k.Name, Event: event, Parameters: params})
 }
 
 func (k *KarmenClient) AddAction(function func(parameters map[string]string) *Result, name string) {

@@ -68,6 +68,7 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	// generate a UUID for this event
 	uuid := uuid.New()
 	k.State.Events = make(map[UUID]Results)
+	k.State.EventStates = make(map[UUID]map[ParameterName]ParameterValue)
 
 	// Run through the blocks
 	overallResult := true
@@ -87,8 +88,9 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 
 	k.eventPrint(uuid, "Event", in.GetEvent().EventName, "completed with a result of", overallString)
 
-	// When the event is done, delete the result history
+	// When the event is done, delete the result history and the event state
 	delete(k.State.Events, UUID(uuid.String()))
+	delete(k.State.EventStates, UUID(uuid.String()))
 
 	return &pb.EventResponse{Request: in, Result: &pb.Result{Code: 200}}, nil
 }

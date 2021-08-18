@@ -64,6 +64,7 @@ message EventRequest {
     Event event = 1;
     string uuid = 2;
     string requesterName = 3;
+    map<string, string> parameters = 4;
 }
 
 message EventResponse {
