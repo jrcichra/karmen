@@ -6,9 +6,6 @@ import queue
 import socket
 import grpc
 
-from karmen import karmen_pb2 as pb
-from karmen import karmen_pb2_grpc as pb_grpc
-
 
 class Karmen:
     def __init__(self, name=socket.gethostname(), hostname="localhost", port=8080):
