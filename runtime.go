@@ -199,8 +199,8 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	if err != nil {
 		k.eventPrint(uuid, err)
 	}
-	k.eventPrint(uuid, "Action response:")
-	k.eventPrint(uuid, response)
+	// k.eventPrint(uuid, "Action response:")
+	// k.eventPrint(uuid, response)
 	// Parse the return code - may be expanded later
 
 	var passString string

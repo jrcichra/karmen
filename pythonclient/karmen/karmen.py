@@ -52,8 +52,8 @@ class Karmen:
             msg = next(recv)
 
             # got an action
-            print(f"Got an action!")
-            print(msg)
+            # print(f"Got an action!")
+            # print(msg)
 
             # run the action
             threading.Thread(target=self.handleAction,
