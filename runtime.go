@@ -29,7 +29,7 @@ func (k *karmen) smartenParamMap(m map[string]string) map[ParameterName]Paramete
 	return newMap
 }
 
-func dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
+func (k *karmen) dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
 	newMap := make(map[string]interface{})
 	for key, val := range m {
 		switch val {
@@ -44,7 +44,7 @@ func dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
 }
 
 // m2 takes precendence over m1
-func combineParamMaps(m1, m2 map[ParameterName]ParameterValue) map[ParameterName]ParameterValue {
+func (k *karmen) combineParamMaps(m1, m2 map[ParameterName]ParameterValue) map[ParameterName]ParameterValue {
 	newMap := make(map[ParameterName]ParameterValue)
 	for k, v := range m1 {
 		newMap[k] = v
@@ -75,7 +75,7 @@ func (k *karmen) evaluateConditions(cMap map[ConditionName]ConditionValue, uuid 
 			break
 		}
 
-		b, err = conditions.Evaluate(expr, dumbDownStateMap(k.State.Events[UUID(uuid.String())]))
+		b, err = conditions.Evaluate(expr, k.dumbDownStateMap(k.State.Events[UUID(uuid.String())]))
 		if err != nil {
 			k.eventPrint(uuid, "evaluateConditions() runtime error 3.")
 			k.eventPrint(uuid, err)
@@ -170,7 +170,7 @@ func (k *karmen) runParallelBlock(block *Block, requesterName string, uuid uuid.
 func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string) bool {
 	// Build a grpc action - building in the actions from the static yaml and runtime actions
 	// runtime parameters take precedence over static parameters
-	a := &pb.Action{ActionName: string(action.ActionName), Timestamp: time.Now().Unix(), Parameters: k.dumbDownParamMap(combineParamMaps(action.Parameters, k.State.EventStates[UUID(uuid.String())]))}
+	a := &pb.Action{ActionName: string(action.ActionName), Timestamp: time.Now().Unix(), Parameters: k.dumbDownParamMap(k.combineParamMaps(action.Parameters, k.State.EventStates[UUID(uuid.String())]))}
 	// Form that into a request
 	request := &pb.ActionRequest{Action: a, RequesterName: requesterName}
 	// wait for us to have a dispatcher

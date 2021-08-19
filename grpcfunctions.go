@@ -71,7 +71,7 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 	k.State.EventStates = make(map[UUID]map[ParameterName]ParameterValue)
 
 	// set the event state
-	k.State.EventStates[UUID(uuid.String())] = k.smartenParamMap(in.Event.Parameters)
+	k.State.EventStates[UUID(uuid.String())] = k.smartenParamMap(in.Parameters)
 
 	// Run through the blocks
 	overallResult := true
