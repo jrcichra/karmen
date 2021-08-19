@@ -20,6 +20,15 @@ func (k *karmen) dumbDownParamMap(m map[ParameterName]ParameterValue) map[string
 	return newMap
 }
 
+func (k *karmen) smartenParamMap(m map[string]string) map[ParameterName]ParameterValue {
+	// This is annoying - Ultimate fix is have the strict types defined in gRPC?
+	newMap := make(map[ParameterName]ParameterValue)
+	for key, val := range m {
+		newMap[ParameterName(key)] = ParameterValue(val)
+	}
+	return newMap
+}
+
 func dumbDownStateMap(m map[Variable]VariableValue) map[string]interface{} {
 	newMap := make(map[string]interface{})
 	for key, val := range m {
