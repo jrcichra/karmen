@@ -25,11 +25,20 @@ class Karmen:
         result = self.stub.PingPong(pb.Ping(message="Python!"))
         return result.message
 
-    def runEvent(self, name, parameters=None):
+    def runEvent(self, name, parameters=None, q=None):
         event = pb.Event(eventName=name, timestamp=int(time.time()))
         result = self.stub.EmitEvent(pb.EventRequest(
             requesterName=self.name, event=event, parameters=parameters))
+        # if called from async, put the result in the queue
+        if q is not None:
+            q.put(result)
         return result
+
+    def runEventAsync(self, name, parameters=None):
+        q = queue.Queue()
+        threading.Thread(target=self.runEvent, args=(
+            name, parameters, q)).start()
+        return q
 
     def addAction(self, func, name):
         self.actions[name] = func
