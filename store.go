@@ -1,6 +1,10 @@
 package main
 
-import pb "github.com/jrcichra/karmen/grpc"
+import (
+	"time"
+
+	pb "github.com/jrcichra/karmen/grpc"
+)
 
 type Config struct {
 	Events map[string]*Event
@@ -22,6 +26,7 @@ type Action struct {
 	ActionName ActionName
 	Parameters map[ParameterName]ParameterValue
 	Conditions map[ConditionName]ConditionValue
+	Timeout    time.Duration
 }
 
 type Host struct {

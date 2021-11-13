@@ -28,7 +28,7 @@ func main() {
 	k.Init("bob")
 	k.AddAction(sleep, "sleep")
 	k.Register("127.0.0.1", 8080)
-	result, err := k.RunEvent("pleaseSleep")
+	result, err := k.RunEvent("pleaseSleep",nil)
 	if err != nil {
 		panic(err)
 	}

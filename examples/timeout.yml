@@ -1,0 +1,9 @@
+events:
+  bob.pleaseSleep:
+    - serial:
+        - bob.sleep.5:
+            - seconds: 10
+        - bob.sleep:
+            - seconds: 10
+        - bob.sleep:
+            - seconds: 10

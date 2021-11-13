@@ -5,6 +5,7 @@ import (
 	"log"
 	"strconv"
 	"strings"
+	"time"
 	"unicode"
 
 	"gopkg.in/yaml.v3"
@@ -86,14 +87,11 @@ func (c *Config) parseEvents(events *yaml.Node) {
 func (c *Config) parseEvent(fullname string, event *yaml.Node) {
 	// log.Println("parseEvent() -", fullname)
 	split := strings.Split(fullname, ".")
-	if len(split) != 2 {
+	if len(split) < 2 {
 		log.Fatal("Invalid YAML. Events should be named hostname.eventname. Found '" + fullname + "'.")
 	}
 	hostname := HostName(split[0])
 	eventname := EventName(split[1])
-
-	// log.Println("hostname  =", hostname)
-	// log.Println("eventname =", eventname)
 
 	blocks := make([]*Block, 0)
 
@@ -136,7 +134,7 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 	// log.Println("parseAction() -", fullname)
 
 	split := strings.Split(fullname, ".")
-	if len(split) != 2 {
+	if len(split) < 2 {
 		log.Fatal("Invalid YAML. Actions should be named hostname.actionname. Found '" + fullname + "'.")
 	}
 	hostname := HostName(split[0])
@@ -144,6 +142,16 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 
 	a.HostName = hostname
 	a.ActionName = actioname
+
+	if len(split) == 3 {
+		timeout, err := strconv.Atoi(split[2])
+		if err != nil {
+			log.Fatal("Invalid Timeout. Timeout should be an integer. Found '" + split[2] + "'.")
+			timeout = 0 // just for safety
+		}
+		//set a.timeout to duration
+		a.Timeout = time.Duration(timeout) * time.Second
+	}
 
 	// log.Println("hostname  =", hostname)
 	// log.Println("actioname =", actioname)

@@ -194,11 +194,33 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	if err != nil {
 		k.eventPrint(uuid, err)
 	}
-	// Wait for a response (because it's serial)
-	response, err := k.State.Hosts[action.HostName].Dispatcher.Recv()
-	if err != nil {
-		k.eventPrint(uuid, err)
+	// Set up the timeout goroutine
+	doneChan := make(chan *pb.ActionResponse)
+	// If there's a timeout, spawn a goroutine to enforce it
+	if action.Timeout > 0 {
+		go func() {
+			time.Sleep(action.Timeout)
+			k.eventPrint(uuid, "Timeout on action:", action.ActionName, "on", action.HostName)
+			doneChan <- nil
+		}()
 	}
+	// Spawn a goroutine to wait for the response
+	go func() {
+		response, err := k.State.Hosts[action.HostName].Dispatcher.Recv()
+		if err != nil {
+			k.eventPrint(uuid, err)
+		}
+		doneChan <- response
+	}()
+
+	// Wait for the action to complete or timeout
+	response := <-doneChan
+
+	//if we timed out we need to create a response for the system
+	if response == nil {
+		response = &pb.ActionResponse{Result: &pb.Result{Code: 502}}
+	}
+
 	// k.eventPrint(uuid, "Action response:")
 	// k.eventPrint(uuid, response)
 	// Parse the return code - may be expanded later
