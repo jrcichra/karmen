@@ -87,7 +87,7 @@ func (c *Config) parseEvents(events *yaml.Node) {
 func (c *Config) parseEvent(fullname string, event *yaml.Node) {
 	// log.Println("parseEvent() -", fullname)
 	split := strings.Split(fullname, ".")
-	if len(split) < 2 {
+	if len(split) != 2 {
 		log.Fatal("Invalid YAML. Events should be named hostname.eventname. Found '" + fullname + "'.")
 	}
 	hostname := HostName(split[0])
