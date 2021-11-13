@@ -200,7 +200,6 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 	if action.Timeout > 0 {
 		go func() {
 			time.Sleep(action.Timeout)
-			k.eventPrint(uuid, "Timeout on action:", action.ActionName, "on", action.HostName)
 			doneChan <- nil
 		}()
 	}
@@ -218,6 +217,7 @@ func (k *karmen) runAction(uuid uuid.UUID, action *Action, requesterName string)
 
 	//if we timed out we need to create a response for the system
 	if response == nil {
+		k.eventPrint(uuid, "Timeout on action:", action.ActionName, "on", action.HostName)
 		response = &pb.ActionResponse{Result: &pb.Result{Code: 502}}
 	}
 
