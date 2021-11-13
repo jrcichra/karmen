@@ -134,8 +134,8 @@ func (c *Config) parseAction(action *yaml.Node, a *Action) {
 	// log.Println("parseAction() -", fullname)
 
 	split := strings.Split(fullname, ".")
-	if len(split) < 2 {
-		log.Fatal("Invalid YAML. Actions should be named hostname.actionname. Found '" + fullname + "'.")
+	if len(split) < 2 || len(split) > 3 {
+		log.Fatal("Invalid YAML. Actions should be named hostname.actionname.(timeout) Found '" + fullname + "'.")
 	}
 	hostname := HostName(split[0])
 	actioname := ActionName(split[1])
