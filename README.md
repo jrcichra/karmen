@@ -15,9 +15,6 @@ Centralized Pub/Sub for microservices
     + I'll be converting the dashes to dots once I add that feature to the condition parser I used
     + For each action, the `{hostname-action-pass}` boolean is set automatically so you can conditionally run actions based on the result of previous actions without managing a parameter. Code 200 is defined as a `pass`
 + Action error handling is improved, currently returning HTTP-like codes. I may downgrade this to a boolean
-## Bugs
-+ Prone to crashes - if the clients aren't set up right or die, karmen may crash
-+ In the meantime, please have the container `--restart=unless-stopped` or have a systemd service keep it up
 
 ## Get Started
 ### Using Karmen (Server):
