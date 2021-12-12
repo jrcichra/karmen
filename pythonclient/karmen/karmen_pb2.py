@@ -17,9 +17,9 @@ _sym_db = _symbol_database.Default()
 
 DESCRIPTOR = _descriptor.FileDescriptor(
   name='karmen.proto',
-  package='',
+  package='karmen',
   syntax='proto3',
-  serialized_pb=_b('\n\x0ckarmen.proto\"\x17\n\x04Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x17\n\x04Pong\x12\x0f\n\x07message\x18\x01 \x01(\t\"\xef\x01\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12,\n\x06\x65vents\x18\x03 \x03(\x0b\x32\x1c.RegisterRequest.EventsEntry\x12.\n\x07\x61\x63tions\x18\x04 \x03(\x0b\x32\x1d.RegisterRequest.ActionsEntry\x1a-\n\x0b\x45ventsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a.\n\x0c\x41\x63tionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"N\n\x10RegisterResponse\x12!\n\x07request\x18\x01 \x01(\x0b\x32\x10.RegisterRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\"v\n\x06Result\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x03\x12+\n\nparameters\x18\x02 \x03(\x0b\x32\x17.Result.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8c\x01\n\x05\x45vent\x12\x11\n\teventName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12*\n\nparameters\x18\x03 \x03(\x0b\x32\x16.Event.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x8f\x01\n\x06\x41\x63tion\x12\x12\n\nactionName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12+\n\nparameters\x18\x03 \x03(\x0b\x32\x17.Action.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"M\n\rActionRequest\x12\x17\n\x06\x61\x63tion\x18\x01 \x01(\x0b\x32\x07.Action\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\"\\\n\x0e\x41\x63tionResponse\x12\x1f\n\x07request\x18\x01 \x01(\x0b\x32\x0e.ActionRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result\x12\x10\n\x08hostname\x18\x03 \x01(\t\"\xb0\x01\n\x0c\x45ventRequest\x12\x15\n\x05\x65vent\x18\x01 \x01(\x0b\x32\x06.Event\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\x12\x31\n\nparameters\x18\x04 \x03(\x0b\x32\x1d.EventRequest.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"H\n\rEventResponse\x12\x1e\n\x07request\x18\x01 \x01(\x0b\x32\r.EventRequest\x12\x17\n\x06result\x18\x02 \x01(\x0b\x32\x07.Result2\xb8\x01\n\x06Karmen\x12/\n\x08Register\x12\x10.RegisterRequest\x1a\x11.RegisterResponse\x12*\n\tEmitEvent\x12\r.EventRequest\x1a\x0e.EventResponse\x12\x37\n\x10\x41\x63tionDispatcher\x12\x0f.ActionResponse\x1a\x0e.ActionRequest(\x01\x30\x01\x12\x18\n\x08PingPong\x12\x05.Ping\x1a\x05.PongB\x1cZ\x1agithub.com/jrcichra/karmenb\x06proto3')
+  serialized_pb=_b('\n\x0ckarmen.proto\x12\x06karmen\"\x17\n\x04Ping\x12\x0f\n\x07message\x18\x01 \x01(\t\"\x17\n\x04Pong\x12\x0f\n\x07message\x18\x01 \x01(\t\"\xfd\x01\n\x0fRegisterRequest\x12\x0c\n\x04name\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x33\n\x06\x65vents\x18\x03 \x03(\x0b\x32#.karmen.RegisterRequest.EventsEntry\x12\x35\n\x07\x61\x63tions\x18\x04 \x03(\x0b\x32$.karmen.RegisterRequest.ActionsEntry\x1a-\n\x0b\x45ventsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x1a.\n\x0c\x41\x63tionsEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\\\n\x10RegisterResponse\x12(\n\x07request\x18\x01 \x01(\x0b\x32\x17.karmen.RegisterRequest\x12\x1e\n\x06result\x18\x02 \x01(\x0b\x32\x0e.karmen.Result\"}\n\x06Result\x12\x0c\n\x04\x63ode\x18\x01 \x01(\x03\x12\x32\n\nparameters\x18\x02 \x03(\x0b\x32\x1e.karmen.Result.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x93\x01\n\x05\x45vent\x12\x11\n\teventName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x31\n\nparameters\x18\x03 \x03(\x0b\x32\x1d.karmen.Event.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"\x96\x01\n\x06\x41\x63tion\x12\x12\n\nactionName\x18\x01 \x01(\t\x12\x11\n\ttimestamp\x18\x02 \x01(\x03\x12\x32\n\nparameters\x18\x03 \x03(\x0b\x32\x1e.karmen.Action.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"T\n\rActionRequest\x12\x1e\n\x06\x61\x63tion\x18\x01 \x01(\x0b\x32\x0e.karmen.Action\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\"j\n\x0e\x41\x63tionResponse\x12&\n\x07request\x18\x01 \x01(\x0b\x32\x15.karmen.ActionRequest\x12\x1e\n\x06result\x18\x02 \x01(\x0b\x32\x0e.karmen.Result\x12\x10\n\x08hostname\x18\x03 \x01(\t\"\xbe\x01\n\x0c\x45ventRequest\x12\x1c\n\x05\x65vent\x18\x01 \x01(\x0b\x32\r.karmen.Event\x12\x0c\n\x04uuid\x18\x02 \x01(\t\x12\x15\n\rrequesterName\x18\x03 \x01(\t\x12\x38\n\nparameters\x18\x04 \x03(\x0b\x32$.karmen.EventRequest.ParametersEntry\x1a\x31\n\x0fParametersEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"V\n\rEventResponse\x12%\n\x07request\x18\x01 \x01(\x0b\x32\x14.karmen.EventRequest\x12\x1e\n\x06result\x18\x02 \x01(\x0b\x32\x0e.karmen.Result2\xf0\x01\n\x06Karmen\x12=\n\x08Register\x12\x17.karmen.RegisterRequest\x1a\x18.karmen.RegisterResponse\x12\x38\n\tEmitEvent\x12\x14.karmen.EventRequest\x1a\x15.karmen.EventResponse\x12\x45\n\x10\x41\x63tionDispatcher\x12\x16.karmen.ActionResponse\x1a\x15.karmen.ActionRequest(\x01\x30\x01\x12&\n\x08PingPong\x12\x0c.karmen.Ping\x1a\x0c.karmen.PongB\x1cZ\x1agithub.com/jrcichra/karmenb\x06proto3')
 )
 
 
@@ -27,13 +27,13 @@ DESCRIPTOR = _descriptor.FileDescriptor(
 
 _PING = _descriptor.Descriptor(
   name='Ping',
-  full_name='Ping',
+  full_name='karmen.Ping',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='message', full_name='Ping.message', index=0,
+      name='message', full_name='karmen.Ping.message', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -51,20 +51,20 @@ _PING = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=16,
-  serialized_end=39,
+  serialized_start=24,
+  serialized_end=47,
 )
 
 
 _PONG = _descriptor.Descriptor(
   name='Pong',
-  full_name='Pong',
+  full_name='karmen.Pong',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='message', full_name='Pong.message', index=0,
+      name='message', full_name='karmen.Pong.message', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -82,27 +82,27 @@ _PONG = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=41,
-  serialized_end=64,
+  serialized_start=49,
+  serialized_end=72,
 )
 
 
 _REGISTERREQUEST_EVENTSENTRY = _descriptor.Descriptor(
   name='EventsEntry',
-  full_name='RegisterRequest.EventsEntry',
+  full_name='karmen.RegisterRequest.EventsEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='RegisterRequest.EventsEntry.key', index=0,
+      name='key', full_name='karmen.RegisterRequest.EventsEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='RegisterRequest.EventsEntry.value', index=1,
+      name='value', full_name='karmen.RegisterRequest.EventsEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -120,26 +120,26 @@ _REGISTERREQUEST_EVENTSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=213,
-  serialized_end=258,
+  serialized_start=235,
+  serialized_end=280,
 )
 
 _REGISTERREQUEST_ACTIONSENTRY = _descriptor.Descriptor(
   name='ActionsEntry',
-  full_name='RegisterRequest.ActionsEntry',
+  full_name='karmen.RegisterRequest.ActionsEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='RegisterRequest.ActionsEntry.key', index=0,
+      name='key', full_name='karmen.RegisterRequest.ActionsEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='RegisterRequest.ActionsEntry.value', index=1,
+      name='value', full_name='karmen.RegisterRequest.ActionsEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -157,40 +157,40 @@ _REGISTERREQUEST_ACTIONSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=260,
-  serialized_end=306,
+  serialized_start=282,
+  serialized_end=328,
 )
 
 _REGISTERREQUEST = _descriptor.Descriptor(
   name='RegisterRequest',
-  full_name='RegisterRequest',
+  full_name='karmen.RegisterRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='name', full_name='RegisterRequest.name', index=0,
+      name='name', full_name='karmen.RegisterRequest.name', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='RegisterRequest.timestamp', index=1,
+      name='timestamp', full_name='karmen.RegisterRequest.timestamp', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='events', full_name='RegisterRequest.events', index=2,
+      name='events', full_name='karmen.RegisterRequest.events', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='actions', full_name='RegisterRequest.actions', index=3,
+      name='actions', full_name='karmen.RegisterRequest.actions', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -208,27 +208,27 @@ _REGISTERREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=67,
-  serialized_end=306,
+  serialized_start=75,
+  serialized_end=328,
 )
 
 
 _REGISTERRESPONSE = _descriptor.Descriptor(
   name='RegisterResponse',
-  full_name='RegisterResponse',
+  full_name='karmen.RegisterResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request', full_name='RegisterResponse.request', index=0,
+      name='request', full_name='karmen.RegisterResponse.request', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='result', full_name='RegisterResponse.result', index=1,
+      name='result', full_name='karmen.RegisterResponse.result', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -246,27 +246,27 @@ _REGISTERRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=308,
-  serialized_end=386,
+  serialized_start=330,
+  serialized_end=422,
 )
 
 
 _RESULT_PARAMETERSENTRY = _descriptor.Descriptor(
   name='ParametersEntry',
-  full_name='Result.ParametersEntry',
+  full_name='karmen.Result.ParametersEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='Result.ParametersEntry.key', index=0,
+      name='key', full_name='karmen.Result.ParametersEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='Result.ParametersEntry.value', index=1,
+      name='value', full_name='karmen.Result.ParametersEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -284,26 +284,26 @@ _RESULT_PARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=457,
-  serialized_end=506,
+  serialized_start=500,
+  serialized_end=549,
 )
 
 _RESULT = _descriptor.Descriptor(
   name='Result',
-  full_name='Result',
+  full_name='karmen.Result',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='code', full_name='Result.code', index=0,
+      name='code', full_name='karmen.Result.code', index=0,
       number=1, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parameters', full_name='Result.parameters', index=1,
+      name='parameters', full_name='karmen.Result.parameters', index=1,
       number=2, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -321,27 +321,27 @@ _RESULT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=388,
-  serialized_end=506,
+  serialized_start=424,
+  serialized_end=549,
 )
 
 
 _EVENT_PARAMETERSENTRY = _descriptor.Descriptor(
   name='ParametersEntry',
-  full_name='Event.ParametersEntry',
+  full_name='karmen.Event.ParametersEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='Event.ParametersEntry.key', index=0,
+      name='key', full_name='karmen.Event.ParametersEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='Event.ParametersEntry.value', index=1,
+      name='value', full_name='karmen.Event.ParametersEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -359,33 +359,33 @@ _EVENT_PARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=457,
-  serialized_end=506,
+  serialized_start=500,
+  serialized_end=549,
 )
 
 _EVENT = _descriptor.Descriptor(
   name='Event',
-  full_name='Event',
+  full_name='karmen.Event',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='eventName', full_name='Event.eventName', index=0,
+      name='eventName', full_name='karmen.Event.eventName', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='Event.timestamp', index=1,
+      name='timestamp', full_name='karmen.Event.timestamp', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parameters', full_name='Event.parameters', index=2,
+      name='parameters', full_name='karmen.Event.parameters', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -403,27 +403,27 @@ _EVENT = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=509,
-  serialized_end=649,
+  serialized_start=552,
+  serialized_end=699,
 )
 
 
 _ACTION_PARAMETERSENTRY = _descriptor.Descriptor(
   name='ParametersEntry',
-  full_name='Action.ParametersEntry',
+  full_name='karmen.Action.ParametersEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='Action.ParametersEntry.key', index=0,
+      name='key', full_name='karmen.Action.ParametersEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='Action.ParametersEntry.value', index=1,
+      name='value', full_name='karmen.Action.ParametersEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -441,33 +441,33 @@ _ACTION_PARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=457,
-  serialized_end=506,
+  serialized_start=500,
+  serialized_end=549,
 )
 
 _ACTION = _descriptor.Descriptor(
   name='Action',
-  full_name='Action',
+  full_name='karmen.Action',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='actionName', full_name='Action.actionName', index=0,
+      name='actionName', full_name='karmen.Action.actionName', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='timestamp', full_name='Action.timestamp', index=1,
+      name='timestamp', full_name='karmen.Action.timestamp', index=1,
       number=2, type=3, cpp_type=2, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parameters', full_name='Action.parameters', index=2,
+      name='parameters', full_name='karmen.Action.parameters', index=2,
       number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -485,34 +485,34 @@ _ACTION = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=652,
-  serialized_end=795,
+  serialized_start=702,
+  serialized_end=852,
 )
 
 
 _ACTIONREQUEST = _descriptor.Descriptor(
   name='ActionRequest',
-  full_name='ActionRequest',
+  full_name='karmen.ActionRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='action', full_name='ActionRequest.action', index=0,
+      name='action', full_name='karmen.ActionRequest.action', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uuid', full_name='ActionRequest.uuid', index=1,
+      name='uuid', full_name='karmen.ActionRequest.uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='requesterName', full_name='ActionRequest.requesterName', index=2,
+      name='requesterName', full_name='karmen.ActionRequest.requesterName', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -530,34 +530,34 @@ _ACTIONREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=797,
-  serialized_end=874,
+  serialized_start=854,
+  serialized_end=938,
 )
 
 
 _ACTIONRESPONSE = _descriptor.Descriptor(
   name='ActionResponse',
-  full_name='ActionResponse',
+  full_name='karmen.ActionResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request', full_name='ActionResponse.request', index=0,
+      name='request', full_name='karmen.ActionResponse.request', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='result', full_name='ActionResponse.result', index=1,
+      name='result', full_name='karmen.ActionResponse.result', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='hostname', full_name='ActionResponse.hostname', index=2,
+      name='hostname', full_name='karmen.ActionResponse.hostname', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -575,27 +575,27 @@ _ACTIONRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=876,
-  serialized_end=968,
+  serialized_start=940,
+  serialized_end=1046,
 )
 
 
 _EVENTREQUEST_PARAMETERSENTRY = _descriptor.Descriptor(
   name='ParametersEntry',
-  full_name='EventRequest.ParametersEntry',
+  full_name='karmen.EventRequest.ParametersEntry',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='key', full_name='EventRequest.ParametersEntry.key', index=0,
+      name='key', full_name='karmen.EventRequest.ParametersEntry.key', index=0,
       number=1, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='value', full_name='EventRequest.ParametersEntry.value', index=1,
+      name='value', full_name='karmen.EventRequest.ParametersEntry.value', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
@@ -613,40 +613,40 @@ _EVENTREQUEST_PARAMETERSENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=457,
-  serialized_end=506,
+  serialized_start=500,
+  serialized_end=549,
 )
 
 _EVENTREQUEST = _descriptor.Descriptor(
   name='EventRequest',
-  full_name='EventRequest',
+  full_name='karmen.EventRequest',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='event', full_name='EventRequest.event', index=0,
+      name='event', full_name='karmen.EventRequest.event', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='uuid', full_name='EventRequest.uuid', index=1,
+      name='uuid', full_name='karmen.EventRequest.uuid', index=1,
       number=2, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='requesterName', full_name='EventRequest.requesterName', index=2,
+      name='requesterName', full_name='karmen.EventRequest.requesterName', index=2,
       number=3, type=9, cpp_type=9, label=1,
       has_default_value=False, default_value=_b("").decode('utf-8'),
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='parameters', full_name='EventRequest.parameters', index=3,
+      name='parameters', full_name='karmen.EventRequest.parameters', index=3,
       number=4, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
@@ -664,27 +664,27 @@ _EVENTREQUEST = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=971,
-  serialized_end=1147,
+  serialized_start=1049,
+  serialized_end=1239,
 )
 
 
 _EVENTRESPONSE = _descriptor.Descriptor(
   name='EventResponse',
-  full_name='EventResponse',
+  full_name='karmen.EventResponse',
   filename=None,
   file=DESCRIPTOR,
   containing_type=None,
   fields=[
     _descriptor.FieldDescriptor(
-      name='request', full_name='EventResponse.request', index=0,
+      name='request', full_name='karmen.EventResponse.request', index=0,
       number=1, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
       options=None, file=DESCRIPTOR),
     _descriptor.FieldDescriptor(
-      name='result', full_name='EventResponse.result', index=1,
+      name='result', full_name='karmen.EventResponse.result', index=1,
       number=2, type=11, cpp_type=10, label=1,
       has_default_value=False, default_value=None,
       message_type=None, enum_type=None, containing_type=None,
@@ -702,8 +702,8 @@ _EVENTRESPONSE = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=1149,
-  serialized_end=1221,
+  serialized_start=1241,
+  serialized_end=1327,
 )
 
 _REGISTERREQUEST_EVENTSENTRY.containing_type = _REGISTERREQUEST
@@ -742,14 +742,14 @@ _sym_db.RegisterFileDescriptor(DESCRIPTOR)
 Ping = _reflection.GeneratedProtocolMessageType('Ping', (_message.Message,), dict(
   DESCRIPTOR = _PING,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:Ping)
+  # @@protoc_insertion_point(class_scope:karmen.Ping)
   ))
 _sym_db.RegisterMessage(Ping)
 
 Pong = _reflection.GeneratedProtocolMessageType('Pong', (_message.Message,), dict(
   DESCRIPTOR = _PONG,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:Pong)
+  # @@protoc_insertion_point(class_scope:karmen.Pong)
   ))
 _sym_db.RegisterMessage(Pong)
 
@@ -758,19 +758,19 @@ RegisterRequest = _reflection.GeneratedProtocolMessageType('RegisterRequest', (_
   EventsEntry = _reflection.GeneratedProtocolMessageType('EventsEntry', (_message.Message,), dict(
     DESCRIPTOR = _REGISTERREQUEST_EVENTSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:RegisterRequest.EventsEntry)
+    # @@protoc_insertion_point(class_scope:karmen.RegisterRequest.EventsEntry)
     ))
   ,
 
   ActionsEntry = _reflection.GeneratedProtocolMessageType('ActionsEntry', (_message.Message,), dict(
     DESCRIPTOR = _REGISTERREQUEST_ACTIONSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:RegisterRequest.ActionsEntry)
+    # @@protoc_insertion_point(class_scope:karmen.RegisterRequest.ActionsEntry)
     ))
   ,
   DESCRIPTOR = _REGISTERREQUEST,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:RegisterRequest)
+  # @@protoc_insertion_point(class_scope:karmen.RegisterRequest)
   ))
 _sym_db.RegisterMessage(RegisterRequest)
 _sym_db.RegisterMessage(RegisterRequest.EventsEntry)
@@ -779,7 +779,7 @@ _sym_db.RegisterMessage(RegisterRequest.ActionsEntry)
 RegisterResponse = _reflection.GeneratedProtocolMessageType('RegisterResponse', (_message.Message,), dict(
   DESCRIPTOR = _REGISTERRESPONSE,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:RegisterResponse)
+  # @@protoc_insertion_point(class_scope:karmen.RegisterResponse)
   ))
 _sym_db.RegisterMessage(RegisterResponse)
 
@@ -788,12 +788,12 @@ Result = _reflection.GeneratedProtocolMessageType('Result', (_message.Message,),
   ParametersEntry = _reflection.GeneratedProtocolMessageType('ParametersEntry', (_message.Message,), dict(
     DESCRIPTOR = _RESULT_PARAMETERSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:Result.ParametersEntry)
+    # @@protoc_insertion_point(class_scope:karmen.Result.ParametersEntry)
     ))
   ,
   DESCRIPTOR = _RESULT,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:Result)
+  # @@protoc_insertion_point(class_scope:karmen.Result)
   ))
 _sym_db.RegisterMessage(Result)
 _sym_db.RegisterMessage(Result.ParametersEntry)
@@ -803,12 +803,12 @@ Event = _reflection.GeneratedProtocolMessageType('Event', (_message.Message,), d
   ParametersEntry = _reflection.GeneratedProtocolMessageType('ParametersEntry', (_message.Message,), dict(
     DESCRIPTOR = _EVENT_PARAMETERSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:Event.ParametersEntry)
+    # @@protoc_insertion_point(class_scope:karmen.Event.ParametersEntry)
     ))
   ,
   DESCRIPTOR = _EVENT,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:Event)
+  # @@protoc_insertion_point(class_scope:karmen.Event)
   ))
 _sym_db.RegisterMessage(Event)
 _sym_db.RegisterMessage(Event.ParametersEntry)
@@ -818,12 +818,12 @@ Action = _reflection.GeneratedProtocolMessageType('Action', (_message.Message,),
   ParametersEntry = _reflection.GeneratedProtocolMessageType('ParametersEntry', (_message.Message,), dict(
     DESCRIPTOR = _ACTION_PARAMETERSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:Action.ParametersEntry)
+    # @@protoc_insertion_point(class_scope:karmen.Action.ParametersEntry)
     ))
   ,
   DESCRIPTOR = _ACTION,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:Action)
+  # @@protoc_insertion_point(class_scope:karmen.Action)
   ))
 _sym_db.RegisterMessage(Action)
 _sym_db.RegisterMessage(Action.ParametersEntry)
@@ -831,14 +831,14 @@ _sym_db.RegisterMessage(Action.ParametersEntry)
 ActionRequest = _reflection.GeneratedProtocolMessageType('ActionRequest', (_message.Message,), dict(
   DESCRIPTOR = _ACTIONREQUEST,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:ActionRequest)
+  # @@protoc_insertion_point(class_scope:karmen.ActionRequest)
   ))
 _sym_db.RegisterMessage(ActionRequest)
 
 ActionResponse = _reflection.GeneratedProtocolMessageType('ActionResponse', (_message.Message,), dict(
   DESCRIPTOR = _ACTIONRESPONSE,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:ActionResponse)
+  # @@protoc_insertion_point(class_scope:karmen.ActionResponse)
   ))
 _sym_db.RegisterMessage(ActionResponse)
 
@@ -847,12 +847,12 @@ EventRequest = _reflection.GeneratedProtocolMessageType('EventRequest', (_messag
   ParametersEntry = _reflection.GeneratedProtocolMessageType('ParametersEntry', (_message.Message,), dict(
     DESCRIPTOR = _EVENTREQUEST_PARAMETERSENTRY,
     __module__ = 'karmen_pb2'
-    # @@protoc_insertion_point(class_scope:EventRequest.ParametersEntry)
+    # @@protoc_insertion_point(class_scope:karmen.EventRequest.ParametersEntry)
     ))
   ,
   DESCRIPTOR = _EVENTREQUEST,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:EventRequest)
+  # @@protoc_insertion_point(class_scope:karmen.EventRequest)
   ))
 _sym_db.RegisterMessage(EventRequest)
 _sym_db.RegisterMessage(EventRequest.ParametersEntry)
@@ -860,7 +860,7 @@ _sym_db.RegisterMessage(EventRequest.ParametersEntry)
 EventResponse = _reflection.GeneratedProtocolMessageType('EventResponse', (_message.Message,), dict(
   DESCRIPTOR = _EVENTRESPONSE,
   __module__ = 'karmen_pb2'
-  # @@protoc_insertion_point(class_scope:EventResponse)
+  # @@protoc_insertion_point(class_scope:karmen.EventResponse)
   ))
 _sym_db.RegisterMessage(EventResponse)
 
@@ -882,16 +882,16 @@ _EVENTREQUEST_PARAMETERSENTRY._options = _descriptor._ParseOptions(descriptor_pb
 
 _KARMEN = _descriptor.ServiceDescriptor(
   name='Karmen',
-  full_name='Karmen',
+  full_name='karmen.Karmen',
   file=DESCRIPTOR,
   index=0,
   options=None,
-  serialized_start=1224,
-  serialized_end=1408,
+  serialized_start=1330,
+  serialized_end=1570,
   methods=[
   _descriptor.MethodDescriptor(
     name='Register',
-    full_name='Karmen.Register',
+    full_name='karmen.Karmen.Register',
     index=0,
     containing_service=None,
     input_type=_REGISTERREQUEST,
@@ -900,7 +900,7 @@ _KARMEN = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='EmitEvent',
-    full_name='Karmen.EmitEvent',
+    full_name='karmen.Karmen.EmitEvent',
     index=1,
     containing_service=None,
     input_type=_EVENTREQUEST,
@@ -909,7 +909,7 @@ _KARMEN = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='ActionDispatcher',
-    full_name='Karmen.ActionDispatcher',
+    full_name='karmen.Karmen.ActionDispatcher',
     index=2,
     containing_service=None,
     input_type=_ACTIONRESPONSE,
@@ -918,7 +918,7 @@ _KARMEN = _descriptor.ServiceDescriptor(
   ),
   _descriptor.MethodDescriptor(
     name='PingPong',
-    full_name='Karmen.PingPong',
+    full_name='karmen.Karmen.PingPong',
     index=3,
     containing_service=None,
     input_type=_PING,

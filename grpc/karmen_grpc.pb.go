@@ -34,7 +34,7 @@ func NewKarmenClient(cc grpc.ClientConnInterface) KarmenClient {
 
 func (c *karmenClient) Register(ctx context.Context, in *RegisterRequest, opts ...grpc.CallOption) (*RegisterResponse, error) {
 	out := new(RegisterResponse)
-	err := c.cc.Invoke(ctx, "/Karmen/Register", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/karmen.Karmen/Register", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -43,7 +43,7 @@ func (c *karmenClient) Register(ctx context.Context, in *RegisterRequest, opts .
 
 func (c *karmenClient) EmitEvent(ctx context.Context, in *EventRequest, opts ...grpc.CallOption) (*EventResponse, error) {
 	out := new(EventResponse)
-	err := c.cc.Invoke(ctx, "/Karmen/EmitEvent", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/karmen.Karmen/EmitEvent", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +51,7 @@ func (c *karmenClient) EmitEvent(ctx context.Context, in *EventRequest, opts ...
 }
 
 func (c *karmenClient) ActionDispatcher(ctx context.Context, opts ...grpc.CallOption) (Karmen_ActionDispatcherClient, error) {
-	stream, err := c.cc.NewStream(ctx, &Karmen_ServiceDesc.Streams[0], "/Karmen/ActionDispatcher", opts...)
+	stream, err := c.cc.NewStream(ctx, &Karmen_ServiceDesc.Streams[0], "/karmen.Karmen/ActionDispatcher", opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -83,7 +83,7 @@ func (x *karmenActionDispatcherClient) Recv() (*ActionRequest, error) {
 
 func (c *karmenClient) PingPong(ctx context.Context, in *Ping, opts ...grpc.CallOption) (*Pong, error) {
 	out := new(Pong)
-	err := c.cc.Invoke(ctx, "/Karmen/PingPong", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/karmen.Karmen/PingPong", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -140,7 +140,7 @@ func _Karmen_Register_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Karmen/Register",
+		FullMethod: "/karmen.Karmen/Register",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KarmenServer).Register(ctx, req.(*RegisterRequest))
@@ -158,7 +158,7 @@ func _Karmen_EmitEvent_Handler(srv interface{}, ctx context.Context, dec func(in
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Karmen/EmitEvent",
+		FullMethod: "/karmen.Karmen/EmitEvent",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KarmenServer).EmitEvent(ctx, req.(*EventRequest))
@@ -202,7 +202,7 @@ func _Karmen_PingPong_Handler(srv interface{}, ctx context.Context, dec func(int
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/Karmen/PingPong",
+		FullMethod: "/karmen.Karmen/PingPong",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(KarmenServer).PingPong(ctx, req.(*Ping))
@@ -214,7 +214,7 @@ func _Karmen_PingPong_Handler(srv interface{}, ctx context.Context, dec func(int
 // It's only intended for direct use with grpc.RegisterService,
 // and not to be introspected or modified (even as a copy)
 var Karmen_ServiceDesc = grpc.ServiceDesc{
-	ServiceName: "Karmen",
+	ServiceName: "karmen.Karmen",
 	HandlerType: (*KarmenServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{

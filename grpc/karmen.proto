@@ -1,5 +1,6 @@
 syntax = "proto3";
 
+package karmen;
 option go_package = "github.com/jrcichra/karmen";
 
 service Karmen {
