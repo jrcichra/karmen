@@ -101,8 +101,9 @@ func (k *karmen) EmitEvent(ctx context.Context, in *pb.EventRequest) (*pb.EventR
 func (k *karmen) ActionDispatcher(s pb.Karmen_ActionDispatcherServer) error {
 	// log.Println("Holding onto an ActionDispatcher. Waiting for a stub ActionResponse telling us who this is...")
 	who, err := s.Recv()
-	if err != nil {
-		log.Println(err)
+	if err != nil || who == nil {
+		log.Println("ActionDispatcher got an error:", err)
+		return err
 	}
 
 	// hostname is the name of the host. We'll use this hostname to map a hostname with this dispatcher
