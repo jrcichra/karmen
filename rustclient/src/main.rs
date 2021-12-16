@@ -3,8 +3,8 @@ use std::collections::HashMap;
 use std::sync::Arc;
 use std::time::SystemTime;
 use std::time::UNIX_EPOCH;
+use tokio::sync::mpsc;
 use tokio::sync::Mutex;
-// use tokio::task;
 
 pub mod karmen {
     tonic::include_proto!("karmen");
@@ -13,26 +13,23 @@ pub mod karmen {
 struct Karmen {
     name: String,
     client: KarmenClient<tonic::transport::Channel>,
-    actions: HashMap<String, fn(parameters: HashMap<String, String>) -> karmen::Result>,
+    actions: Arc<Mutex<HashMap<String, fn(parameters: HashMap<String, String>) -> karmen::Result>>>,
 }
 
 #[tonic::async_trait]
 trait KarmenTraits {
-    async fn new(
-        name: &str,
-        host: &str,
-        port: u16,
-    ) -> Result<Arc<Mutex<Karmen>>, tonic::transport::Error>;
-    async fn ping(&mut self) -> Result<String, Box<dyn std::error::Error>>;
-    async fn register(&mut self) -> Result<karmen::Result, Box<dyn std::error::Error>>;
-    async fn handle_actions(&mut self) -> Result<(), Box<dyn std::error::Error>>;
+    async fn new(name: &str, host: &str, port: u16)
+        -> Result<Arc<Karmen>, tonic::transport::Error>;
+    async fn ping(&self) -> Result<String, Box<dyn std::error::Error>>;
+    async fn register(&self) -> Result<karmen::Result, Box<dyn std::error::Error>>;
+    async fn handle_actions(&self) -> Result<(), Box<dyn std::error::Error>>;
     async fn add_action(
-        &mut self,
+        &self,
         action: fn(parameters: HashMap<String, String>) -> karmen::Result,
         name: &str,
     ) -> Result<(), Box<dyn std::error::Error>>;
     async fn run_event(
-        &mut self,
+        &self,
         name: &str,
         params: HashMap<String, String>,
     ) -> Result<karmen::Result, Box<dyn std::error::Error>>;
@@ -44,22 +41,22 @@ impl KarmenTraits for Karmen {
         name: &str,
         host: &str,
         port: u16,
-    ) -> Result<Arc<Mutex<Karmen>>, tonic::transport::Error> {
+    ) -> Result<Arc<Karmen>, tonic::transport::Error> {
         let client = KarmenClient::connect(format!("http://{}:{}", host, port)).await?;
-        Ok(Arc::new(Mutex::new(Karmen {
+        Ok(Arc::new(Karmen {
             name: name.to_string(),
-            client,
-            actions: HashMap::new(),
-        })))
+            client: client,
+            actions: Arc::new(Mutex::new(HashMap::new())),
+        }))
     }
-    async fn ping(&mut self) -> Result<String, Box<dyn std::error::Error>> {
+    async fn ping(&self) -> Result<String, Box<dyn std::error::Error>> {
         let request = tonic::Request::new(karmen::Ping {
             message: "Rusty Karmen!".into(),
         });
-        let response = self.client.ping_pong(request).await?.into_inner();
+        let response = self.client.clone().ping_pong(request).await?.into_inner();
         Ok(response.message)
     }
-    async fn register(&mut self) -> Result<karmen::Result, Box<dyn std::error::Error>> {
+    async fn register(&self) -> Result<karmen::Result, Box<dyn std::error::Error>> {
         let request = tonic::Request::new(karmen::RegisterRequest {
             name: self.name.clone(),
             timestamp: SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs() as i64,
@@ -68,7 +65,7 @@ impl KarmenTraits for Karmen {
             actions: HashMap::new(),
             events: HashMap::new(),
         });
-        let response = self.client.register(request).await?.into_inner();
+        let response = self.client.clone().register(request).await?.into_inner();
         match response.result {
             Some(r) => {
                 if r.code != 200 {
@@ -82,50 +79,63 @@ impl KarmenTraits for Karmen {
             ))),
         }
     }
-    async fn handle_actions(&mut self) -> Result<(), Box<dyn std::error::Error>> {
+    async fn handle_actions(&self) -> Result<(), Box<dyn std::error::Error>> {
         //send an action response with our details one time. For the rest of time, sleep
-        // TODO: come up with a more elegant solution
         let name = self.name.clone();
-        println!("Made it to handle actions");
-        let request = {
-            async_stream::stream! {
-                let mut sent = false;
-                while true {
-                    if !sent {
-                        let response = karmen::ActionResponse {
-                            hostname: name.clone(),
-                            // unused on inital message
-                            request: None,
-                            result: None,
-                        };
-                        sent = true;
-                        println!("Sent initial action response");
-                        yield response;
-                    } else {
-                        println!("Sleeping for 12345 seconds");
-                        tokio::time::sleep(std::time::Duration::from_secs(12345)).await;
-                    }
-                }
+        let (tx, mut rx): (
+            mpsc::Sender<karmen::ActionResponse>,
+            mpsc::Receiver<karmen::ActionResponse>,
+        ) = mpsc::channel(32);
+        let request = async_stream::stream! {
+            // Send our details once
+            let response = karmen::ActionResponse {
+                hostname: name.clone(),
+                // unused on inital message
+                request: None,
+                result: None,
+            };
+            yield response;
+            // Listen for more outgoing messages from the queue
+            while let Some(response) = rx.recv().await {
+                yield response;
             }
+            println!("{}", "Closing stream");
         };
-        println!("About to handle actions...");
-        let mut stream = self.client.action_dispatcher(request).await?.into_inner();
-        while let Some(res) = stream.message().await? {
-            println!("Got a request to run {:?}", res);
+        let mut stream = self
+            .client
+            .clone()
+            .action_dispatcher(tonic::Request::new(request))
+            .await?
+            .into_inner();
+        while let Some(req) = stream.message().await? {
+            println!("Got a request to run {:?}", req);
+            // Prepare the function call with a clone of the request
+            let action = req.clone().action.unwrap();
+            let action_name = action.action_name.clone();
+            let parameters = action.parameters;
+            // Run the function
+            let result = self.actions.lock().await.get(&action_name).unwrap()(parameters);
+            // Process the result
+            let response = karmen::ActionResponse {
+                hostname: self.name.clone(),
+                request: Some(req),
+                result: Some(result),
+            };
+            // Send the result back through the queue
+            tx.send(response).await?;
         }
         Ok(())
     }
     async fn add_action(
-        &mut self,
+        &self,
         action: fn(parameters: HashMap<String, String>) -> karmen::Result,
         name: &str,
     ) -> Result<(), Box<dyn std::error::Error>> {
-        println!("Adding action {}", name);
-        self.actions.insert(name.to_string(), action);
+        self.actions.lock().await.insert(name.to_string(), action);
         Ok(())
     }
     async fn run_event(
-        &mut self,
+        &self,
         name: &str,
         params: HashMap<String, String>,
     ) -> Result<karmen::Result, Box<dyn std::error::Error>> {
@@ -143,7 +153,7 @@ impl KarmenTraits for Karmen {
             // TODO: determine if this is used
             uuid: "".to_string(),
         });
-        let response = self.client.emit_event(request).await?.into_inner();
+        let response = self.client.clone().emit_event(request).await?.into_inner();
         match response.result {
             Some(r) => {
                 if r.code != 200 {
@@ -160,7 +170,11 @@ impl KarmenTraits for Karmen {
 }
 
 fn a_fn(parameters: HashMap<String, String>) -> karmen::Result {
-    println!("I am running sleep from rust!!!");
+    println!("Running action a_fn");
+    //sleep
+    let sleep_time = parameters.get("seconds").unwrap().parse::<u64>().unwrap();
+    println!("Sleeping for {} seconds", sleep_time);
+    std::thread::sleep(std::time::Duration::from_secs(sleep_time));
     karmen::Result {
         code: 200,
         parameters: parameters,
@@ -169,30 +183,14 @@ fn a_fn(parameters: HashMap<String, String>) -> karmen::Result {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    println!("Making client");
     let client = Karmen::new("bob", "localhost", 8080).await?;
-    println!("Add Action");
-    client
-        .clone()
-        .lock()
-        .await
-        .add_action(a_fn, "sleep")
-        .await?;
-    println!("Register");
-    client.clone().lock().await.register().await?;
-    println!("Handle Actions");
+    client.add_action(a_fn, "sleep").await?;
+    client.register().await?;
     let client2 = client.clone();
     let join = tokio::spawn(async move {
-        client2.clone().lock().await.handle_actions().await;
+        client2.handle_actions().await;
     });
-    println!("Run Event");
-    client
-        .clone()
-        .lock()
-        .await
-        .run_event("pleaseSleep", HashMap::new())
-        .await?;
-    println!("Done");
+    client.run_event("pleaseSleep", HashMap::new()).await?;
     join.await?;
     Ok(())
 }
