@@ -188,7 +188,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     client.register().await?;
     let client2 = client.clone();
     let join = tokio::spawn(async move {
-        client2.handle_actions().await;
+        let _ = client2.handle_actions().await;
     });
     client.run_event("pleaseSleep", HashMap::new()).await?;
     join.await?;
