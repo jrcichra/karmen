@@ -110,19 +110,24 @@ impl KarmenTraits for Karmen {
         while let Some(req) = stream.message().await? {
             println!("Got a request to run {:?}", req);
             // Prepare the function call with a clone of the request
+            let name = self.name.clone();
+            let tx2 = tx.clone();
             let action = req.clone().action.unwrap();
             let action_name = action.action_name.clone();
             let parameters = action.parameters;
-            // Run the function
-            let result = self.actions.lock().await.get(&action_name).unwrap()(parameters);
-            // Process the result
-            let response = karmen::ActionResponse {
-                hostname: self.name.clone(),
-                request: Some(req),
-                result: Some(result),
-            };
-            // Send the result back through the queue
-            tx.send(response).await?;
+            // Run the function asyncronously
+            let action_func = self.actions.lock().await.get(&action_name).unwrap().clone();
+            tokio::spawn(async move {
+                let result = action_func(parameters);
+                // Process the result
+                let response = karmen::ActionResponse {
+                    hostname: name,
+                    request: Some(req),
+                    result: Some(result),
+                };
+                // Send the result back through the queue
+                let _ = tx2.send(response).await;
+            });
         }
         Ok(())
     }
