@@ -6,7 +6,7 @@ description = "A rust client library for the Karmen framework"
 homepage = "https://github.com/jrcichra/karmen"
 repository = "https://github.com/jrcichra/karmen"
 readme = "../../README.md"
-name = "MIT"
+license = "MIT"
 
 [dependencies]
 tonic = "0.6"
