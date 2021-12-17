@@ -1,6 +1,6 @@
 [package]
 name = "karmen"
-version = "0.1.0"
+version = "2.0.0"
 edition = "2021"
 description = "A rust client library for the Karmen framework"
 homepage = "https://github.com/jrcichra/karmen"
