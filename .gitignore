@@ -1,4 +1,4 @@
 pythonclient/__pycache__/
 karmen
 goclient/goclient
-rustclient/target
+rustclient/*/target

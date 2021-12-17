@@ -1,0 +1,21 @@
+[package]
+name = "karmen"
+version = "0.1.0"
+edition = "2021"
+description = "A rust client library for the Karmen framework"
+homepage = "https://github.com/jrcichra/karmen"
+repository = "https://github.com/jrcichra/karmen"
+readme = "../../README.md"
+
+[dependencies]
+tonic = "0.6"
+prost = "0.9"
+tokio = { version = "1.0", features = ["macros", "rt-multi-thread"] }
+futures = "0.3.17"
+async-stream = "0.3.2"
+
+[build-dependencies]
+tonic-build = "0.6"
+
+[license]
+name = "MIT"
