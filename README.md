@@ -24,6 +24,7 @@ Centralized Pub/Sub for microservices
 ### Clients with examples:
 + [Python](./pythonclient) - example in `karmen.py` when executed as script
 + [Golang](./goclient)     - example in `main.go`
++ [Rust](./rustclient)     - example in `example/src/main.rs` [Crates.io](https://crates.io/crates/karmen)
 + Or write your own! Karmen runs on gRPC. See existing implementations for reference
 ### Powered by
 + [gRPC](https://grpc.io/)
