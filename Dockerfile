@@ -1,4 +1,4 @@
-FROM golang:1.17.7-alpine3.15 as firststage
+FROM golang:1.18-alpine3.15 as firststage
 WORKDIR /karmen
 ADD . .
 RUN go build -o karmen .
