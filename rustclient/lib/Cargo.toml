@@ -16,4 +16,4 @@ futures = "0.3.17"
 async-stream = "0.3.2"
 
 [build-dependencies]
-tonic-build = "0.7.2"
+tonic-build = "0.8.0"
