@@ -1,4 +1,4 @@
-FROM golang:1.19.0-bullseye as firststage
+FROM golang:1.18.0-bullseye as firststage
 WORKDIR /karmen
 ADD . .
 RUN go build -o karmen .
