@@ -1,4 +1,4 @@
-FROM golang:1.18-alpine3.15 as firststage
+FROM golang:1.19.0-alpine3.15 as firststage
 WORKDIR /karmen
 ADD . .
 RUN apk add git
