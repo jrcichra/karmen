@@ -3,7 +3,7 @@ WORKDIR /karmen
 ADD . .
 RUN apk add git
 RUN go build -o karmen .
-FROM alpine:3.15
+FROM alpine:3.16.1
 WORKDIR /karmen
 COPY --from=firststage /karmen/karmen .
 CMD ["./karmen"]
