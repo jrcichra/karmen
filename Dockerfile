@@ -1,4 +1,4 @@
-FROM golang:1.21.0-bullseye as firststage
+FROM golang:1.21.1-bullseye as firststage
 WORKDIR /karmen
 ADD . .
 RUN CGO_ENABLED=0 go build -o karmen .
