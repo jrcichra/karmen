@@ -6,7 +6,7 @@ require (
 	github.com/davecgh/go-spew v1.1.1
 	github.com/google/uuid v1.3.1
 	github.com/jrcichra/conditions v0.2.4
-	google.golang.org/grpc v1.58.2
+	google.golang.org/grpc v1.58.3
 	google.golang.org/protobuf v1.31.0
 	gopkg.in/yaml.v3 v3.0.1
 )
