@@ -4,7 +4,7 @@ go 1.18
 
 require (
 	github.com/davecgh/go-spew v1.1.1
-	github.com/google/uuid v1.4.0
+	github.com/google/uuid v1.5.0
 	github.com/jrcichra/conditions v0.2.4
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
