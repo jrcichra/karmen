@@ -1,8 +1,9 @@
-FROM golang:1.25-bookworm as firststage
-WORKDIR /karmen
-ADD . .
-RUN CGO_ENABLED=0 go build -o karmen .
+# Binaries are cross-compiled natively in CI (see .github/workflows/karmen.yml)
+# and staged under bin/ — this image only repackages them, so multi-arch
+# builds need no QEMU/binfmt support.
+ARG TARGETARCH
+
 FROM gcr.io/distroless/static-debian11
 WORKDIR /karmen
-COPY --from=firststage /karmen/karmen .
+COPY bin/karmen-${TARGETARCH} /karmen/karmen
 CMD ["./karmen"]
